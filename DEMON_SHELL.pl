@@ -69,6 +69,10 @@ while (1)
 	unlink $TODO;
 }
 # ACT ########################
+sub act
+{
+	return 0;
+}
 # CORE #######################
 sub name
 {
