@@ -1,0 +1,35 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+###########################
+# WORLD - buildworld 
+###########################
+# devfs ruleset
+###########################
+my ($usb) = @ARGV;
+die "ARG1 /USB\n" unless (defined $usb);
+$usb =~ s%/\z%%;
+chdir("$usb/KERN/") or die "FAIL $usb\n";;
+###########################
+my $b = $usb.'jbin/';
+my (@bin) = glob("$b*");
+chomp @bin;
+`cp $_ /bin/` for (@bin);
+###########################
+`cp jconf/motd /etc/`;
+`cp jconf/purgejail /etc/`;
+`cp jconf/rc.conf /etc/rc.conf`;
+`cp jconf/sshd_config /etc/ssh/sshd_config`;
+`cp jconf/ttys /etc/ttys`;
+`cp jconf/sysctl.conf /etc/sysctl.conf`;
+`cp jconf/login.conf /etc/login.conf`;
+###########################
+print"\nFILES U MUST NOW EDIT: rc.conf\n";
+###########################
+`pw userdel toor`;
+###########################
+open(my $jfh, '<', '/etc/purgejail');	
+my @lines = readline $jfh;
+close $jfh; chomp @lines;
+chdir("/");
+`rm -rf $_` for (@lines);
+print "JAIL PURGED\n";

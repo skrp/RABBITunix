@@ -1,0 +1,58 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+###########################
+# WORLD - buildworld 
+###########################
+my ($usb) = @ARGV;
+die "ARG1 /USB\n" unless (defined $usb);
+$usb =~ s%/\z%%;
+###########################
+chdir("$usb/KERN/") or die "FAIL $usb\n";;
+###########################
+`zfs create zroot/usr/ANONI`;
+`zfs create zroot/usr/ANONI/home`;
+###########################
+`zfs create zroot/usr/nfs`;
+`zfs set sharenfs=on zroot/usr/nfs`;
+###########################
+`zfs create -o mountpoint=/HIVE zroot/HIVE`;
+mkdir("/HIVE/BIO/");
+mkdir("/HIVE/TODO/");
+mkdir("/HIVE/FEED/");
+`touch /HIVE/PING`;
+###########################
+my (@bin) = glob("bin/*");
+chomp @bin;
+`cp $_ /bin/` for (@bin);
+###########################
+`cp ../BANK/net /etc/pf_net`;
+`cp conf/src.conf /etc/src.conf`;
+`cp conf/make.conf /etc/make.conf`;
+`cp conf/motd /etc/`;
+`cp conf/purgehost /etc/`;
+`cp conf/pf.conf /etc/pf.conf`;
+`cp conf/ntpd.conf /usr/local/etc/ntpd.conf`;
+`cp conf/rc.conf /etc/rc.conf`;
+#`cp conf/resolv.conf /etc/resolv.conf`;
+`cp conf/sshd_config /etc/ssh/sshd_config`;
+#`cp conf/start_if.em0 /etc/start_if.em0`;
+#`cp conf/start_if.re0 /etc/start_if.re0`;
+`cp conf/ttys /etc/ttys`;
+`cp conf/KERN /usr/src/sys/amd64/conf/KERN`;
+`cp conf/sysctl.conf /etc/sysctl.conf`;
+`cp conf/jail.conf /etc/jail.conf`;
+`cp conf/login.conf /etc/login.conf`;
+`cp conf/exports /etc/exports`;
+###########################
+my $hn = `hostname`; chomp $hn;
+`echo hostname='$hn' >> /etc/rc.conf`;
+###########################
+print"\nFILES U MUST NOW EDIT: rc.conf  pf.conf resolv.conf jail.conf\n";
+###########################
+`pw userdel toor`;
+###########################
+open(my $hfh, '<', '/etc/purgehost');	
+my @lines = readline $hfh;
+close $hfh; chomp @lines;
+chdir("/");
+`rm -rf $_` for (@lines);

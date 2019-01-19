@@ -1,33 +1,74 @@
-#########################
-# RABBITunix - unix world
-#########################
-FreeBSD unix kernel world 
-sculpted by Meri Kann cibR punX
-to0j
-#########################
-# terms #################
-RABBIT - root user
-OTOPSK - One Time Only Pre Shared Key
-ANONI - jail world of day traffic
-HIVE - DEMON hive workers
-SICC - archive System In Complete Chaos
-CHRON - network time & system cycles
-CLAN - capisum network groups
-PF - explicit-network-traffic pipes
-CONF - network sha-verified configurations
-NOTARY - sha-verified witness
-INIT - pipe-highway establish
-BANK - $KEY exchange reputation
-$SKEY - usb access-keys
-PASS - thermal-printed access-keys
-# users #################
-norm - basic jail shells
-seer - mods connected to a lord
-lord - capisum lords of system
-root - alarm secured access
-#########################
-
-#########################
-#########################
-#########################
-
+###################################
+# MKRX   - network unix clones
+###################################
+# TODO ############################
+KERN
+start_if.
+login.conf
+src.conf
+fix ports/mod install
+chmod
+general hardening
+release
+zfs set userquota=20MB
+conf
+capisum groups
+clan anoni assignment
+devfs host/jail ruleset
+# USB #############################
+BANK
+	authorized_keys
+	net	node ip4 list
+	host/	host $KEY dumps
+KERN
+	README
+	bin/
+		host programs
+	jbin/
+		jail programs
+	conf/
+		host conf files
+	jconf/
+		jail conf files
+	install/
+		host install proceedure
+	jinstall/
+		jail install proceedure
+LOG
+	misc/
+META
+	NAM
+	PAT
+	SIZ
+	ENC
+# PREP ############################
+# load usb with authorized_keys
+# INSTALL PROCEEDURE ##############
+# set bios boot from usb
+# boot FreeBSD install memstick
+# --- REBOOT ---
+# zfs import usb 
+# /bin/sh /usb/KERN/install/1.INIT
+# perl /usb/KERN/install/2.PORT /usb
+# perl /usb/KERN/install/3.WORLD /usb
+# vim rc.conf && vim pf.conf && vim jail.conf
+# rm -r /usr/obj
+# cd /usr/src/
+# make -j2 buildkernel KERNCONF=KERN
+# make installkernel KERNCONF=KERN
+# rm -r /usr/obj
+# make -j2 buildworld
+# make installworld
+# make installworld DESTDIR=/usr/ANONI
+# make distribution DESTDIR=/usr/ANONI
+# cp -R /usr/local/ /usr/ANONI/usr/local/
+# zpool export usb
+# zpool import usb -o altroot=/usr/ANONI/mnt usb
+##### cp /bin/* /usr/ANONI 
+# jail -c anoni
+# jexec 1 /bin/csh
+# perl usb/KERN/jinstall/1.WORLD /usb
+# perl usb/KERN/jinstall/2.ANONI /usb hostname
+# vim rc.conf
+# --- REBOOT ---
+###################################

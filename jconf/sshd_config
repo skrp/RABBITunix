@@ -1,0 +1,10 @@
+Protocol 2
+AddressFamily inet
+PermitRootLogin no
+StrictModes yes
+MaxAuthTries 4
+AuthenticationMethods publickey
+PasswordAuthentication no
+ChallengeResponseAuthentication no 
+UsePam no 
+PubkeyAuthentication yes
