@@ -10,7 +10,7 @@ my ($usb, $node) = @ARGV;
 die "ARG1 /USB ARG2 HOSTNAME\n" unless (defined $node);
 $usb =~ s%/\z%%;
 ############################
-my $limit = 10;
+my $limit = 20000;
 my $shell = '/bin/csh';
 ############################
 my @list = 1..$limit;
@@ -21,8 +21,7 @@ cr_clan();
 cr_home($_) for (@list);
 cr_usr($_) for (@list);
 cr_key($_) for (@list);
-############################
-#`zfs set userquota=20MB`;
+`chown :norm /HIVE/FEED/norm`;
 ############################
 sub cr_home
 {
@@ -37,6 +36,8 @@ sub cr_home
 
 	mkdir("$ssh");
 	copy($auth, $ssh); 
+
+	`cp $usb/KERN/conf/.vimrc $home`;
 
 	`chown -R $usr $ssh`;
 ############################
@@ -85,17 +86,17 @@ sub cr_key
 ############################
 sub cr_clan
 {
-	my @c = qw(clan anoni world heir pf zfs usb hive mod rabbit idx scp txn frep init nrep reg);
 ############################
-	push(@clan, $_) for (@c);
-	push(@clan, "x$_") for (@c);
+	my @clan = qw(norm heir);
 ############################
 	`pw groupadd $_` for (@clan);
 ############################
 }
 sub clan
 {
-	my $clan = $clan[rand @clan];
+	my $clan = 'norm';
+	my $rnum = `jot -r 1 0 16`;
+	$clan = 'heir' if ($rnum == 0);
 	return $clan;	
 }
 ############################

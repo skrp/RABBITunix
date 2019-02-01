@@ -1,0 +1,33 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+############################
+# USB - mount usb 
+############################
+my ($met, $pool, $node, $mode, $usr) = @ARGV;
+die "ARG1 method ARG1 pool ARG2 node ARG mode ARG3 usr\n" unless (defined $mode);
+############################
+# USB pool node norm|heir
+if ($met eq 'c')
+	{ con($pool, $node, $mode); }
+elsif ($met eq 'a')
+	{ anoni($usr, $pool); }
+sub con
+{
+	my ($pool, $node, $mode) = @_;
+	my $dir = "/tmp/$pool/BANK/$node/$mode/".;
+	`zpool import -f -o altroot=/tmp/ $pool`;
+	
+	opendir(my $dh, $dir);
+	my @dir = readline $dh;	
+	shift @dir; shift @dir;
+
+	my $KEY = $dir.$dir[0];
+	copy($KEY, "/home/con/$node$mode$dir[0]");
+}
+############################
+# ANONI USB
+sub anoni
+{
+	`zpool import -f -o altroot=/home/$usr/usb $pool`;
+	`chown -R con /home/$usr`;
+}

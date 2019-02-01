@@ -1,20 +1,33 @@
 ###################################
-# RABBITunix - unix world clones
+# MKRX   - network unix clones
 ###################################
+# con -> usb -> $KEY -> unmount -> ssh -> ANONI -> usb
 # TODO ############################
+WORLD
+HIVE
+
+notary
+forgien $KEY
+ntp
+proxy
+
+chmod
+conf
+devfs host/jail ruleset
+
+clan anoni assignment
+
 KERN
 start_if.
 login.conf
 src.conf
-fix ports/mod install
-chmod
-general hardening
-release
-zfs set userquota=20MB
-conf
+
+pure c code 
+usb-install-release
 capisum groups
-clan anoni assignment
-devfs host/jail ruleset
+general hardening
+fix ports/mod install
+
 # USB #############################
 BANK
 	authorized_keys
@@ -65,31 +78,14 @@ META
 # zpool export usb
 # zpool import usb -o altroot=/usr/ANONI/mnt usb
 ##### cp /bin/* /usr/ANONI 
+# jail -c world
 # jail -c anoni
 # jexec 1 /bin/csh
 # perl usb/KERN/jinstall/1.WORLD /usb
 # perl usb/KERN/jinstall/2.ANONI /usb hostname
 # vim rc.conf
+# zpool export usb
 # --- REBOOT ---
-###################################
-# terms ###########################
-RABBIT - root user
-OTOPSK - One Time Only Pre Shared Key
-ANONI - jail world of day traffic
-HIVE - DEMON hive workers
-SICC - archive System In Complete Chaos
-CHRON - network time & system cycles
-CLAN - capisum network groups
-PF - explicit-network-traffic pipes
-CONF - network sha-verified configurations
-NOTARY - sha-verified witness
-INIT - pipe-highway establish
-BANK - $KEY exchange reputation
-$SKEY - usb access-keys
-PASS - thermal-printed access-keys
-# users ###########################
-norm - basic jail shells
-seer - mods connected to a lord
-lord - capisum lords of system
-root - alarm secured access
+# zpool import usb
+# perl usb/KERN/install/4.POSTJAIL
 ###################################

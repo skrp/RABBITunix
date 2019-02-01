@@ -15,11 +15,12 @@ chdir("$usb/KERN/") or die "FAIL $usb\n";;
 `zfs create zroot/usr/nfs`;
 `zfs set sharenfs=on zroot/usr/nfs`;
 ###########################
-`zfs create -o mountpoint=/HIVE zroot/HIVE`;
-mkdir("/HIVE/BIO/");
-mkdir("/HIVE/TODO/");
-mkdir("/HIVE/FEED/");
-`touch /HIVE/PING`;
+`zfs create -o mountpoint=/usr/HIVE zroot/HIVE`;
+mkdir("/usr/HIVE/BIO/");
+mkdir("/usr/HIVE/TODO/");
+mkdir("/usr/HIVE/FEED/");
+mkdir("/usr/HIVE/FEED/norm");
+`touch /usr/HIVE/PING`;
 ###########################
 my (@bin) = glob("bin/*");
 chomp @bin;
@@ -56,3 +57,124 @@ my @lines = readline $hfh;
 close $hfh; chomp @lines;
 chdir("/");
 `rm -rf $_` for (@lines);
+###########################
+my $shell = '/bin/csh';
+my $home = "/home/con/";
+my $cusb = "/home/con/usb/";
+`mkdir $home`;
+`mkdir $cusb`;
+`cp $usb/KERN/conf/.cshrc $home`;
+`echo con | pw useradd -h 0 -n con -d $home -s $shell`;
+`chmod -R 700 $home`;
+`chown -R con $home`;
+#`pw usermod $usr -G $clan`;
+############################
+# HEIR #####################
+# rabbit -> con_host -> ANONI_jail -> heir_jail -> rabbit_host -> root 
+############################
+my @clan = cr_clan();
+my $limit = 20000;
+my $shell = '/bin/csh';
+my @list = 1..$limit;
+mkdir("/root/clan");
+############################
+cr_home($_) for (@list);
+cr_usr($_) for (@list);
+cr_key($_) for (@list);
+############################
+sub cr_home
+{
+	my ($usr) = @_;
+############################
+	my $home = "/home/$usr/";
+	`mkdir $home`;
+############################
+	my $ssh = $home.'.ssh/';
+	my $auth = $usb.'/BANK/authorized_keys';
+	my $nauth = $ssh.'authorized_keys';
+
+	mkdir("$ssh");
+	copy($auth, $ssh); 
+
+	`cp $usb/KERN/conf/.vimrc $home`;
+
+	`chown -R $usr $ssh`;
+############################
+	`cp $usb/KERN/conf/.cshrc $home`;
+}
+############################
+sub cr_usr
+{
+	my ($usr) = @_;
+	my $home = "/home/$usr/";
+	`pw useradd -n $usr -d $home -s $shell`;
+	`chmod -R 700 $home`;
+	`chown -R $usr $home`;
+	
+	my $clan = clan();
+	`pw usermod $usr -G $clan`;
+	`echo '$usr' >> /root/clan/$clan`; 
+	print "$usr created\n";
+}
+############################
+sub cr_key
+{
+	my ($usr) = @_;
+############################
+	my $dump = $usb."/BANK/host/$node/$usr";
+	my $key = "/home/$usr/.ssh/id_rsa";
+	my $remote = $key.'.pub';
+	`mkdir -p $dump`;
+############################
+	my $pass;
+	my $cnt = 0;
+	while ($cnt < 5)
+	{
+		my $in = int(rand(1000));
+		$pass .= " $in";
+		$cnt++;
+	}
+############################
+	`ssh-keygen -q -N "$pass" -t rsa -b 2048 -f $key`;
+############################
+	copy($remote, "$dump/id_rsa.pub");
+	`echo "$pass" > $dump/p`;
+############################
+	print "$key created\n";
+}
+############################
+sub cr_clan
+{
+	my @c = qw(wheel clan rep world pf zfs usb hive src);
+############################
+	push(@clan, $_) for (@c);
+	push(@clan, "x$_") for (@c);
+############################
+	`pw groupadd $_` for (@clan);
+	return @clan;
+############################
+}
+sub clan
+{
+	my $rnum = `jot -r 1 0 16`;
+	my $clan = $clan[$rnum];
+	return $clan;	
+}
+############################
+sub neopass
+{
+	my @p = qw(0 . 1 2 3 4 5 6 + 7 8 9 / * - q w e r a s d f z x c v);
+	my @set = `jot -r 5 0 27`;
+	my $pass;
+############################
+	my $cnt2 = 0;
+	while ($cnt2 < 5)
+	{
+		$pass .= ' ' unless ($cnt2 == 0); 
+		my @set = `jot -r 5 0 27`;
+		$pass.=$p[$_] for (@set);
+		$cnt2++;
+	}
+############################
+	return $pass;
+}

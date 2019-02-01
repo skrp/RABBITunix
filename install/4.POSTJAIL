@@ -1,0 +1,21 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+###############################
+# POSTJAIL - final touchs
+###############################
+my @A;
+###############################
+opendir my $dh "/usr/ANONI/home";
+@A = readdir $dh;
+close $dh;
+shift @A; shift @A;
+###############################
+`zfs set userquota@$_=20M zroot/ANONI/home` for (@A);
+###############################
+#opendir my $dh "/usr/WORLD/home";
+#@W = readdir $dh;
+#close $dh;
+#shift @W; shift @W;
+###############################
+#`zfs set userquota@$_=20M zroot/WORLD/home` for (@W);
+###############################
