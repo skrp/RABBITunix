@@ -1,32 +1,41 @@
 #!/usr/local/bin/perl
 use strict; use warnings;
+use File::Copy;
 ###########################
 # WORLD - buildworld 
 ###########################
-my ($usb) = @ARGV;
-die "ARG1 /USB\n" unless (defined $usb);
+my ($usb, $node) = @ARGV;
+die "ARG1 /usb ARG2 node\n" unless (defined $node);
 $usb =~ s%/\z%%;
 ###########################
 chdir("$usb/KERN/") or die "FAIL $usb\n";;
 ###########################
 `zfs create zroot/usr/ANONI`;
 `zfs create zroot/usr/ANONI/home`;
+`zfs create zroot/usr/ANONI/WORLD`;
+`zfs create zroot/usr/ANONI/CNT`;
+`zfs create zroot/usr/ANONI/dump`;
+`mkdir /usr/ANONI/dump/pool`;
+`mkdir /usr/ANONI/dump/g`;
+`chmod 333 /usr/ANONI/dump/pool`;
+`chmod 333 /usr/ANONI/dump/g`;
 ###########################
 `zfs create zroot/usr/nfs`;
 `zfs set sharenfs=on zroot/usr/nfs`;
 ###########################
-`zfs create -o mountpoint=/usr/HIVE zroot/HIVE`;
-mkdir("/usr/HIVE/BIO/");
-mkdir("/usr/HIVE/TODO/");
-mkdir("/usr/HIVE/FEED/");
-mkdir("/usr/HIVE/FEED/norm");
-`touch /usr/HIVE/PING`;
+`zfs create -o mountpoint=/usr/ANONI/HIVE zroot/HIVE`;
+mkdir("/usr/ANONI/HIVE/BIO/");
+mkdir("/usr/ANONI/HIVE/TODO/");
+mkdir("/usr/ANONI/HIVE/FEED/");
+mkdir("/usr/ANONI/HIVE/FEED/norm");
+`touch /usr/ANONI/HIVE/PING`;
 ###########################
 my (@bin) = glob("bin/*");
 chomp @bin;
 `cp $_ /bin/` for (@bin);
 ###########################
-`cp ../BANK/net /etc/pf_net`;
+`cp ../BANK/pf_net /etc/pf_net`;
+#`cp conf/fstab /etc/fstab`;
 `cp conf/src.conf /etc/src.conf`;
 `cp conf/make.conf /etc/make.conf`;
 `cp conf/motd /etc/`;
@@ -59,34 +68,32 @@ chdir("/");
 `rm -rf $_` for (@lines);
 ###########################
 my $shell = '/bin/csh';
-my $home = "/home/con/";
-my $cusb = "/home/con/usb/";
+my $home = "/usr/home/con/";
+my $cusb = "/usr/home/con/usb/";
 `mkdir $home`;
 `mkdir $cusb`;
 `cp $usb/KERN/conf/.cshrc $home`;
 `echo con | pw useradd -h 0 -n con -d $home -s $shell`;
 `chmod -R 700 $home`;
 `chown -R con $home`;
-#`pw usermod $usr -G $clan`;
 ############################
 # HEIR #####################
 # rabbit -> con_host -> ANONI_jail -> heir_jail -> rabbit_host -> root 
 ############################
 my @clan = cr_clan();
-my $limit = 20000;
-my $shell = '/bin/csh';
+my $limit = 1000;
 my @list = 1..$limit;
 mkdir("/root/clan");
 ############################
 cr_home($_) for (@list);
 cr_usr($_) for (@list);
-cr_key($_) for (@list);
+cr_key($_, $node) for (@list);
 ############################
 sub cr_home
 {
 	my ($usr) = @_;
 ############################
-	my $home = "/home/$usr/";
+	my $home = "/usr/home/$usr/";
 	`mkdir $home`;
 ############################
 	my $ssh = $home.'.ssh/';
@@ -106,7 +113,7 @@ sub cr_home
 sub cr_usr
 {
 	my ($usr) = @_;
-	my $home = "/home/$usr/";
+	my $home = "/usr/home/$usr/";
 	`pw useradd -n $usr -d $home -s $shell`;
 	`chmod -R 700 $home`;
 	`chown -R $usr $home`;
@@ -119,12 +126,12 @@ sub cr_usr
 ############################
 sub cr_key
 {
-	my ($usr) = @_;
+	my ($usr, $node) = @_;
 ############################
-	my $dump = $usb."/BANK/host/$node/$usr";
-	my $key = "/home/$usr/.ssh/id_rsa";
+	my $idump = $usb."/BANK/host/$node/$usr";
+	my $key = "/usr/home/$usr/.ssh/id_rsa";
 	my $remote = $key.'.pub';
-	`mkdir -p $dump`;
+	`mkdir -p $idump`;
 ############################
 	my $pass;
 	my $cnt = 0;
@@ -137,8 +144,8 @@ sub cr_key
 ############################
 	`ssh-keygen -q -N "$pass" -t rsa -b 2048 -f $key`;
 ############################
-	copy($remote, "$dump/id_rsa.pub");
-	`echo "$pass" > $dump/p`;
+	copy($remote, "$idump/id_rsa.pub");
+	`echo "$pass" > $idump/p`;
 ############################
 	print "$key created\n";
 }

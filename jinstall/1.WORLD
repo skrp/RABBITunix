@@ -21,7 +21,7 @@ chomp @bin;
 `cp jconf/sshd_config /etc/ssh/sshd_config`;
 `cp jconf/ttys /etc/ttys`;
 `cp jconf/sysctl.conf /etc/sysctl.conf`;
-`cp jconf/login.conf /etc/login.conf`;
+#`cp jconf/login.conf /etc/login.conf`;
 ###########################
 print"\nFILES U MUST NOW EDIT: rc.conf\n";
 ###########################

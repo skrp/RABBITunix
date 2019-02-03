@@ -1,1 +1,5 @@
 rm -rf ~/.ssh
+# perl /bin/LOCAL $USR
+# chdir $usr $dir
+# ln -s $CNT.$usr $usr.$location
+# echo 100 > $CNT.$usr

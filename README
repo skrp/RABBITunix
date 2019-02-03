@@ -3,7 +3,9 @@
 ###################################
 # con -> usb -> $KEY -> unmount -> ssh -> ANONI -> usb
 # TODO ############################
-WORLD
+rm chdir 
+
+server
 HIVE
 
 notary
@@ -11,21 +13,18 @@ forgien $KEY
 ntp
 proxy
 
-chmod
-conf
-devfs host/jail ruleset
-
-clan anoni assignment
-
 KERN
 start_if.
 login.conf
 src.conf
 
+clan anoni assignment
+devfs host/jail ruleset
 pure c code 
 usb-install-release
 capisum groups
-general hardening
+conf
+chmod general hardening
 fix ports/mod install
 
 # USB #############################
@@ -78,7 +77,6 @@ META
 # zpool export usb
 # zpool import usb -o altroot=/usr/ANONI/mnt usb
 ##### cp /bin/* /usr/ANONI 
-# jail -c world
 # jail -c anoni
 # jexec 1 /bin/csh
 # perl usb/KERN/jinstall/1.WORLD /usb
@@ -88,4 +86,5 @@ META
 # --- REBOOT ---
 # zpool import usb
 # perl usb/KERN/install/4.POSTJAIL
+# perl usb/KERN/install/5.MAP
 ###################################

@@ -1,0 +1,61 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+#########################
+# MAP - create dirs
+#########################
+my $dir = '/usr/ANONI/WORLD/';
+#########################
+#########################
+my $X = 50;
+my $Y = 80;
+#########################
+my $XMAX = 10;
+my $YMAX = 10;
+#########################
+my @xmap;
+my @ymap;
+#########################
+mkdir $dir;
+#########################
+my $x = 0;
+while ($x < $XMAX)
+{	
+	my $y = 0;
+	while ($y < $YMAX)
+       	{ 
+		
+		my $idir = $dir.'p'.$x.'p'.$y.'/';
+		my $WALL = $idir.'WALL';
+		my $EXIT = $idir.'EXIT';
+		my $SIGN = $idir.'SIGN';
+		my $MAP = $idir.'MAP';
+#########################
+		 mkdir $idir;
+#########################
+		`touch $WALL`;
+		`chflags uappend map $WALL`;
+		`touch $SIGN`;
+		`chmod 555 $SIGN`;
+		`mkdir $EXIT`;
+		`chmod 555 $EXIT`;
+#########################
+		open(my $fh, '>', $MAP);
+		my $ix = 0;
+		while ($ix < $X)
+		{
+			my $iy = 0;
+			while ($iy < $Y)
+			{
+				print $fh '.'; 
+				$iy++;
+			}
+			print $fh "\n";
+			$ix++;
+		}
+#########################
+		$y++;
+	}	
+	$x++;
+}
+#########################
+#########################

@@ -9,25 +9,23 @@ die "FAIL STILLBORN $!\n" unless (daemon() == 0);
 # GLOBAL #####################
 my $NAME = name();
 # /HIVE/
-my $PING = '/HIVE/PING';
-my $BIO = '/HIVE/BIO/'.$NAME;
-my $BIOYAY = '/HIVE/BIO/'.$NAME.'_YAY';
-my $BIOFAIL = '/HIVE/BIO/'.$NAME.'_FAIL';
-my $TODO = '/HIVE/TODO/'.$NAME;
-my $FEED = '/HIVE/FEED/';
-my $POOL = '/HIVE/DUMP/pool/';
-my $G = '/HIVE/DUMP/g/';
+my $ROOT = '/usr/ANONI/HIVE/'
+my $PING = $ROOT.'PING';
+my $BIO = $ROOT.'BIO/'.$NAME;
+my $BIOYAY = $ROOT.'BIO/'.$NAME.'_YAY';
+my $BIOFAIL = $ROOT.'BIO/'.$NAME.'_FAIL';
+my $TODO = $ROOT.'TODO/'.$NAME;
+my $FEED = $ROOT.'FEED/';
+my $POOL = '/usr/ANONI/dump/pool/';
+my $G = '/usr/ANONI/dump/g/';
 # attributes
 my $BIRTH = age();
 my $SLEEP = $TODO.'_SLEEP';
 my $RATE = 100;
 my $YAY = 0;
 my $FAIL = 0;
-# log
-my $Lfh; 
-my $Yfh;
-my $Ffh;
 # LOG ########################
+my ($Lfh, $Yfh, $Ffh); 
 open($Lfh, '>>', $BIO);
 open($Yfh, '>>', $BIOYAY);
 open($Ffh, '>>', $BIOFAIL);

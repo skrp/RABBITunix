@@ -5,12 +5,16 @@ use strict; use warnings;
 ###############################
 my @A;
 ###############################
-opendir my $dh "/usr/ANONI/home";
+opendir(my $dh, "/usr/ANONI/home");
 @A = readdir $dh;
 close $dh;
 shift @A; shift @A;
+
+print "$_\n" for @A;
+sleep 10;
+
 ###############################
-`zfs set userquota@$_=20M zroot/ANONI/home` for (@A);
+`zfs set userquota\@$_=20M zroot/usr/ANONI/home` for (@A);
 ###############################
 #opendir my $dh "/usr/WORLD/home";
 #@W = readdir $dh;

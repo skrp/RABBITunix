@@ -10,7 +10,7 @@ my ($usb, $node) = @ARGV;
 die "ARG1 /USB ARG2 HOSTNAME\n" unless (defined $node);
 $usb =~ s%/\z%%;
 ############################
-my $limit = 20000;
+my $limit = 1000;
 my $shell = '/bin/csh';
 ############################
 my @list = 1..$limit;
