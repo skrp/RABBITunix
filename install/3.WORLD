@@ -9,6 +9,9 @@ die "ARG1 /usb ARG2 node\n" unless (defined $node);
 $usb =~ s%/\z%%;
 ###########################
 chdir("$usb/KERN/") or die "FAIL $usb\n";;
+`chown -R root /root/`;
+`chmod -R 700 /root/`;
+`rm /home/`;
 ###########################
 `zfs create zroot/usr/ANONI`;
 `zfs create zroot/usr/ANONI/home`;
@@ -56,8 +59,6 @@ chomp @bin;
 ###########################
 my $hn = `hostname`; chomp $hn;
 `echo hostname='$hn' >> /etc/rc.conf`;
-###########################
-print"\nFILES U MUST NOW EDIT: rc.conf  pf.conf resolv.conf jail.conf\n";
 ###########################
 `pw userdel toor`;
 ###########################
@@ -122,6 +123,8 @@ sub cr_usr
 	`pw usermod $usr -G $clan`;
 	`echo '$usr' >> /root/clan/$clan`; 
 	print "$usr created\n";
+############################
+	`chmod -R 700 $home.ssh`;
 }
 ############################
 sub cr_key
@@ -144,7 +147,9 @@ sub cr_key
 ############################
 	`ssh-keygen -q -N "$pass" -t rsa -b 2048 -f $key`;
 ############################
-	copy($remote, "$idump/id_rsa.pub");
+	copy($key, "$idump/id_rsa");
+	copy($remote, "$idump/known_hosts");
+	copy($remote, "/usr/home/$usr/.ssh/authorized_keys");
 	`echo "$pass" > $idump/p`;
 ############################
 	print "$key created\n";
@@ -185,3 +190,4 @@ sub neopass
 ############################
 	return $pass;
 }
+print"\nFILES U MUST NOW EDIT: rc.conf  pf.conf resolv.conf jail.conf\n";

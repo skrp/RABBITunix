@@ -2,10 +2,10 @@ Protocol 2
 AddressFamily inet
 PermitRootLogin no
 StrictModes yes
-MaxAuthTries 4
+MaxAuthTries 2 
 AuthenticationMethods publickey
-AuthorizedKeysFile none
+AuthorizedKeysFile ".ssh/authorized_keys"
+PubkeyAuthentication yes
 PasswordAuthentication no
 ChallengeResponseAuthentication no 
 UsePam no 
-PubkeyAuthentication yes

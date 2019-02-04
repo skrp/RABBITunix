@@ -1,37 +1,43 @@
 ###################################
 # MKRX   - network unix clones
 ###################################
-# con -> usb -> $KEY -> unmount -> ssh -> ANONI -> usb
-# TODO ############################
-rm chdir 
+# unix clones allow for uniform standardization keystone of network security
+# OTOPSK allows next-level obfuscation for anonymous usr traffic
 
-server
-HIVE
+# usr takes a FreeBSD 10.3 installer usb
+# inserts into an AMD64 computer
+# installs FreeBSD 10.3 GENERIC
+# sculpts new kernel via commands below
+# populates usb with OTOPSK access-keys $KEY for the new host
+# usr trades $KEY amongst network for access to other hosts
 
-notary
-forgien $KEY
-ntp
-proxy
+# CLAN nfs unix groups allow persistent data accross ANONI sessions
 
-KERN
-start_if.
-login.conf
-src.conf
+# norm usr in ANONI access host via ssh
+# heir usr in ANONI only way to access host via ssh
 
-clan anoni assignment
-devfs host/jail ruleset
-pure c code 
-usb-install-release
-capisum groups
-conf
-chmod general hardening
-fix ports/mod install
+# Only way root 
+# heir $KEY -> ssh ANONI heir -> RABBIT $KEY -> ssh host RABBIT -> su root 
 
+# Anonymous - all usr accounts deleted after first access
+# Secure    - usb pre-shared keys counter man-in-the-middle
+# TERMS ###########################
+# con    - physical host console user
+# norm   - jail ssh user
+# heir   - jail ssh user able to access host
+# lord   - host ssh capiscum super-user
+# $KEY   - rsa encrypted access-key
+# OTOPSK - one time only pre shared key 
+# RABBIT - alarm authenticated-wheel hole to host root
+# ANONI  - external-anonymous access shell interface
+# WORLD  - unix nfsv4 CLAN filesystem
+# CLAN   - unix network groups
 # USB #############################
 BANK
-	authorized_keys
 	net	node ip4 list
-	host/	host $KEY dumps
+	host/	host dumps
+	  node/ host $KEY
+	   usr/ known_host(id_rsa.pub) id_rsa 
 KERN
 	README
 	bin/
@@ -60,10 +66,11 @@ META
 # boot FreeBSD install memstick
 # --- REBOOT ---
 # zfs import usb 
+# cd /usb/KERN/install/
 # /bin/sh /usb/KERN/install/1.INIT
 # perl /usb/KERN/install/2.PORT /usb
-# perl /usb/KERN/install/3.WORLD /usb
-# vim rc.conf && vim pf.conf && vim jail.conf
+# perl /usb/KERN/install/3.WORLD /usb node
+# vim /etc/rc.conf && vim /etc/pf.conf && vim /etc/jail.conf && vim /etc/pf_net
 # rm -r /usr/obj
 # cd /usr/src/
 # make -j2 buildkernel KERNCONF=KERN
