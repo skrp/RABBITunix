@@ -1,33 +1,13 @@
-#!/usr/local/bin/perl
-use strict; use warnings;
-#####################################################
-# CENSUS - locations of files
-#####################################################
-my %LIST;
-my @list;
-#####################################################
-my ($dir) = @ARGV;
-die "ARG1 CENSUS LIST DIR\n"  unless (defined $dir);
-$dir =~ s%/\z%%;
-@list = glob("$dir/*_LIST");
-shift @list; shift @list;
-#####################################################
-for (@list)
-{
-  my $ifile = $_;
-  open(my $ifh, '<', $ifile);
-  my @i = readline $ifh;
-  close $ifh; chomp @i;
-#####################################################
-  my $node = $ifile;
-  $node =~ s/_LIST//;
-  $node =~ s%.*/%%;
-#####################################################
-  for (@i)
-  {
-    my $iline = $_;
-    $LIST{$iline} .= " $node";
-  }
-}
-#####################################################
-print "$_$LIST{$_}\n" for (keys %LIST);
+onclick': [], 'title': [], 'class': []}
+\ ],
+\ 'h6': [
+\ ['tt', 'i', 'b', 'big', 'small', 'em', 'strong', 'dfn', 'code', 'samp', 'kbd', 'var', 'cite', 'abbr', 'acronym', 'a', 'img', 'object', 'br', 'script', 'map', 'q', 'sub', 'sup', 'span', 'bdo', 'input', 'select', 'textarea', 'label', 'button'],
+\ { 'ondblclick': [], 'dir': ['ltr', 'rtl'], 'onkeydown': [], 'onkeyup': [], 'onmouseup': [], 'id': [], 'onmouseover': [], 'lang': [], 'style': [], 'onmousemove': [], 'onmouseout': [], 'onmousedown': [], 'onkeypress': [], 'onclick': [], 'title': [], 'class': []}
+\ ],
+\ 'head': [
+\ ['title', 'base', 'script', 'style', 'meta', 'link', 'object'],
+\ { 'profile': [], 'dir': ['ltr', 'rtl'], 'lang': []}
+\ ],
+\ 'hr': [
+\ [],
+\ { 'ondblclick': [], 'onkeydown': [], 'onkeyup': [], 'onmouseup': [], 'id': [], 'onmouseover': [], 'style': [], 'onmousemove': [], 'onmouseout': [], 'onmousedown': [], 'onkeypress': []

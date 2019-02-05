@@ -59,18 +59,13 @@ sub cr_home
 	my ($usr) = @_;
 ############################
 	my $home = "/home/$usr/";
+	my $ssh = "$home.ssh";
 	`mkdir $home`;
 ############################
-	my $ssh = $home.'.ssh/';
-	my $auth = $usb.'/BANK/authorized_keys';
-	my $nauth = $ssh.'authorized_keys';
-
 	mkdir("$ssh");
-	copy($auth, $ssh); 
-
 	`cp $usb/KERN/conf/.vimrc $home`;
-
 	`chown -R $usr $ssh`;
+	`chmod -R 700 $ssh`;
 ############################
 	`cp $usb/KERN/conf/.cshrc $home`;
 }
@@ -96,7 +91,7 @@ sub cr_key
 	my ($usr, $node) = @_;
 ############################
 	my $idump = $usb."/BANK/host/$node/$usr";
-	my $key = "/usr/home/$usr/.ssh/id_rsa";
+	my $key = "/home/$usr/.ssh/id_rsa";
 	my $remote = $key.'.pub';
 	`mkdir -p $idump`;
 ############################

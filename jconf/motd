@@ -1,21 +1,19 @@
-     .#################.
-  <##                   ##> 
-   ##                   ##
-   ##   MKRX            ##
-   ##      unix network ##
-   ##                   ##
-   ##                   ##
-   ##                   ##
-   ##                   ##
-   ## Meri Kann         ##
-   ## cibR punX         ##
-   ##                   ##
-   ##                   ##
-   ##                   ##
-   ##  can o whoop-ass  ##
-  <##                   ##> 
-     '#################'
-
-Documents: /usr/local/share/doc/freebsd/
-FreeBSD version: uname -a
-manual pages:  man man
+mlattrinfo' : {
+\ 'accept' : ['ContentType', ''],
+\ 'accesskey' : ['Character', ''],
+\ 'action' : ['*URI', ''],
+\ 'align' : ['String', ''],
+\ 'alt' : ['*Text', ''],
+\ 'archive' : ['UriList', ''],
+\ 'axis' : ['CDATA', ''],
+\ 'border' : ['Pixels', ''],
+\ 'cellpadding' : ['Length', ''],
+\ 'cellspacing' : ['Length', ''],
+\ 'char' : ['Character', ''],
+\ 'charoff' : ['Length', ''],
+\ 'charset' : ['LangCode', ''],
+\ 'checked' : ['Bool', ''],
+\ 'class' : ['CDATA', ''],
+\ 'codetype' : ['ContentType', ''],
+\ 'cols' : ['*Number', ''],
+\ 'colspan' : ['Numb

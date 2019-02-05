@@ -1,26 +1,15 @@
-#!/usr/local/bin/perl
-use strict; use warnings;
-use File::Copy;
-##########################
-# MV - move files in lists
-##########################
-my ($list, $dir, $dump) = @ARGV;
-die "ARG1 list ARG2 target ARG3 dump" unless (defined $dump);
-$dir =~ s%/\z%%;
-$dump =~ s%/\z%%;
-##########################
-open(my $lfh, '<', $list);
-my @list = <$lfh>;
-chomp @list; close $lfh;
-##########################
-for my $line (@list)
-{ 
-	my $f = "$dir/$line"; 
-	move($f, $dump) or print "FAIL $f $!\n"; 
-##########################
-#	print "$line\n" if (-e $f);
-##########################
-}
-##########################
-unlink $list;
-##########################
+_settings
+  endif
+endfunc "}}}
+
+" get the proper HTML charset name from a Vim encoding option.
+function! tohtml#CharsetFromEncoding(settings) "{{{
+  let l:vim_encoding = a:settings.vim_encoding
+  if exists('g:html_charset_override') && has_key(g:html_charset_override, l:vim_encoding)
+    let a:settings.encoding = g:html_charset_override[l:vim_encoding]
+  else
+    if l:vim_encoding =~ '^8bit\|^2byte'
+      " 8bit- and 2byte- prefixes are to indicate encodings available on the
+      " system that Vim will convert with iconv(), look up just the encoding name,
+      " not Vim's prefix.
+      let l:vim_encoding = substitute(l:vim_encoding, '^

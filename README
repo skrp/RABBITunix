@@ -13,8 +13,8 @@
 
 # CLAN nfs unix groups allow persistent data accross ANONI sessions
 
-# norm usr in ANONI access host via ssh
-# heir usr in ANONI only way to access host via ssh
+# norm usr via ssh ANONI jail access
+# heir usr via ssh ANONI jail access only way to access host 
 
 # Only way root 
 # heir $KEY -> ssh ANONI heir -> RABBIT $KEY -> ssh host RABBIT -> su root 
@@ -59,11 +59,36 @@ META
 	PAT
 	SIZ
 	ENC
-# PREP ############################
-# load usb with authorized_keys
 # INSTALL PROCEEDURE ##############
-# set bios boot from usb
+#### set bios boot from usb
 # boot FreeBSD install memstick
+#### press enter
+#### select Shell
+# camcontrol devlist
+#### find the drive
+# dd if=/dev/zero of=/dev/drive bs=1M
+#### wait a minute
+# ctrl-c
+# exit
+#### select Install
+#### type hostname
+#### tick via spacebar to only have selected: doc src
+#### select Auto (ZFS)
+#### press enter
+#### press enter
+#### tick drive 
+#### select YES
+#### root pass = root
+#### select Cancel
+#### select NO
+#### whatever
+#### whatever
+#### select YES
+#### only tick dumpdev
+#### select NO
+#### select exit
+#### select NO
+#### select Reboot
 # --- REBOOT ---
 # zfs import usb 
 # cd /usb/KERN/install/

@@ -1,32 +1,12 @@
-#!/usr/local/bin/perl
-use strict; use warnings;
-########################################
-# CLONE - build host specific clone lists
-########################################
-my ($lone) = @ARGV;
-die "ARG1 LONE file\n" unless (-e $lone);
-########################################
-my (%nodes, %host);
-########################################
-open(my $fh, '<', $lone);
-my @lines = <$fh>;
-close $fh; chomp @lines;
-# BUILD  HASH ##########################
-for (@lines)
-{
-  my @entry = split(" ",$_);
-  $nodes{$entry[0]} = $entry[1];
-  $host{$entry[1]} = 0;
-}
-# FILE PER HOST ########################
-for (keys %host)
-{
-	my $ihost = $_;
-	open(my $ifh, '>', $ihost);	
-# CYCLE FIND SHA PER HOST ##############
-	for (keys %nodes)
-	{
-		my $isha = $_;
-		print $ifh "$isha\n" if ($nodes{$_} eq $ihost);
-	}
-}
+seout': [], 'onmousemove': [], 'style': []}
+\ ],
+\ 'var': [
+\ ['tt', 'i', 'b', 'u', 's', 'strike', 'big', 'small', 'em', 'strong', 'dfn', 'code', 'samp', 'kbd', 'var', 'cite', 'abbr', 'acronym', 'a', 'img', 'applet', 'object', 'font', 'basefont', 'br', 'script', 'map', 'q', 'sub', 'sup', 'span', 'bdo', 'iframe', 'input', 'select', 'textarea', 'label', 'button'],
+\ { 'ondblclick': [], 'onkeydown': [], 'onkeyup': [], 'onmouseup': [], 'id': [], 'onmouseover': [], 'lang': [], 'onmousedown': [], 'onkeypress': [], 'onclick': [], 'title': [], 'class': [], 'dir': ['ltr', 'rtl'], 'style': [], 'onmousemove': [], 'onmouseout': []}
+\ ],
+\ 'vimxmlattrinfo' : {
+\ 'accept' : ['ContentType', ''],
+\ 'accesskey' : ['Character', ''],
+\ 'action' : ['*URI', ''],
+\ 'align' : ['String', ''],
+\ 'alt' : ['

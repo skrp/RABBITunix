@@ -9,6 +9,7 @@ die "ARG1 /usb ARG2 node\n" unless (defined $node);
 $usb =~ s%/\z%%;
 ###########################
 chdir("$usb/KERN/") or die "FAIL $usb\n";;
+`cp $usb/KERN/conf/.csh /root/`;
 `chown -R root /root/`;
 `chmod -R 700 /root/`;
 `rm /home/`;
