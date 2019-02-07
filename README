@@ -1,96 +1,179 @@
 ###################################
 # MKRX   - network unix clones
+#                              to0j
 ###################################
-# unix clones allow for uniform standardization keystone of network security
-# OTOPSK allows next-level obfuscation for anonymous usr traffic
+# INTRO ###########################
+# journey to the land of unix
+# experience C & shell & perl 
+# ways of deep-sea secrets  
+# ancient raw power of binary logic
 
-# usr takes a FreeBSD 10.3 installer usb
-# inserts into an AMD64 computer
+# this ordeal 
+# reward 1337
+
+# hard for all
+# way to wizard
+
+# are you
+# ready to go?
+###################################
+# README will prove you
+# know nothing & learn much
+# REQUIREMENT #####################
+#   AMD64-machine
+#   $KEY usb-storage-device
+# LAOYERS #########################
+#    HARDWARE_LAYER   : AMD64
+#       mobo cpu mem drive psu montior keyboard
+#       library of raw actions to cpu
+#    SOFTWARE_LAYER   : FreeBSD unix kernels 
+#       mechanisation of actions to HARDWARE_LAYER
+#       system-enviornment
+#    INTERFACE_LAYER : shell c-libraries perl-libraries
+#	permission-based access to SOFTWARE_LAYER
+#       usr interactions with system-enviornment
+#    NETWORK_LAYER   : IPv4 ethernet & wifi end-points
+#       direct encrypted tunnels amongst IPv4 connected-nodes
+#       traffic-relay from one to any in obfuscated fashion 
+#           ex: usr->ANONI_A -> ANONI_D -> ANONI_J -> sleep 
+#               ANONI_J -> ANONI_F -> ANONI_V -> sleep -> action 
+# GUARENTE ########################
+# simple uniform-standardization
+# encourage plain understanding 
+# purchase the truth if anonymous
+# all usr accounts deleted after first access
+# OTOPSK counter man-in-the-middle
+# data-digest-stamp logs
+# OVERVIEW ########################
+# usr inserts FreeBSD 10.3 installer usb
+# into an AMD64 computer
 # installs FreeBSD 10.3 GENERIC
-# sculpts new kernel via commands below
-# populates usb with OTOPSK access-keys $KEY for the new host
+# sculpts kernel & world
+# populates usb with the new-host OTOPSK $KEY
 # usr trades $KEY amongst network for access to other hosts
-
-# CLAN nfs unix groups allow persistent data accross ANONI sessions
-
-# norm usr via ssh ANONI jail access
-# heir usr via ssh ANONI jail access only way to access host 
-
-# Only way root 
-# heir $KEY -> ssh ANONI heir -> RABBIT $KEY -> ssh host RABBIT -> su root 
-
-# Anonymous - all usr accounts deleted after first access
-# Secure    - usb pre-shared keys counter man-in-the-middle
+# CLAN nfs-unix-groups allow persistent data accross ANONI sessions
+# users ###########################
+# con    
+#    physical-host console user
+# norm
+#    ssh jail user
+#    normal jail access to system
+# heir
+#    ssh jail user
+#    only way to access host 
+# lord 
+#    host ssh capiscum super-user-group
+#    each lord has their responsible section of system
+#    wheel jail net zfs world log rep chron
+# root ############################
+# heir $KEY -> ssh ANONI heir 
+# ANONI heir -> RABBIT $KEY -> ssh host RABBIT -> su root 
 # TERMS ###########################
-# con    - physical host console user
-# norm   - jail ssh user
-# heir   - jail ssh user able to access host
-# lord   - host ssh capiscum super-user
-# $KEY   - rsa encrypted access-key
 # OTOPSK - one time only pre shared key 
 # RABBIT - alarm authenticated-wheel hole to host root
 # ANONI  - external-anonymous access shell interface
 # WORLD  - unix nfsv4 CLAN filesystem
 # CLAN   - unix network groups
+# NET    - network IPv4 lists
+# PF_NET - sub-net white-list
+# NODE   - individual machine on network
+# CENSUS - network file index
+# META   - index arrays 
 # USB #############################
 BANK
-	net	node ip4 list
-	host/	host dumps
-	  node/ host $KEY
-	   usr/ known_host(id_rsa.pub) id_rsa 
+   NET 
+   PF_NET  
+      host/	
+         NODE/ 
+            usr/ p id_rsa.pub id_rsa 
 KERN
-	README
-	bin/
+   README
+   bin/
 		host programs
-	jbin/
+   jbin/
 		jail programs
-	conf/
+   conf/
 		host conf files
-	jconf/
+   jconf/
 		jail conf files
-	install/
-		host install proceedure
-	jinstall/
+   install/
+	        host install proceedure
+   jinstall/
 		jail install proceedure
-LOG
-	misc/
 META
-	NAM
-	PAT
-	SIZ
-	ENC
+   NAM
+   PAT
+   SIZ
+   ENC
+LOG
+   misc/
+   CENSUS 
+      NODE/
+# BEGIN ###########################
+# keyboard F1-F12 are machine-unique 
+# one will drop you into BIOS quickly upon boot
+# power-one machine
+# wait to see if mobo will present F? key
+# or spam F? key
+# drop to BIOS
+# BIOS will reveal machine cpu
+# curiousity & relentlessness rewards answer
+###################################
+# -    raw command typed into interface
+#### - action 
+CAPS - item a variable learnt from prior step
 # INSTALL PROCEEDURE ##############
 #### set bios boot from usb
-# boot FreeBSD install memstick
+#### boot FreeBSD install memstick
 #### press enter
 #### select Shell
 # camcontrol devlist
-#### find the drive
-# dd if=/dev/zero of=/dev/drive bs=1M
-#### wait a minute
+#### this cmd returns all storage-devices
+#### find storage-device to over-write 
+#### DRIVE = storage-device 
+
+# dd if=/dev/zero of=/dev/DRIVE bs=1M
+
+#### wait a minute or let it finish
+#### to finish
 # ctrl-c
+
 # exit
 #### select Install
-#### type hostname
-#### tick via spacebar to only have selected: doc src
+
+#### type hostname new-node-name
+
+#### tick via spacebar 
+#### only have tick: doc src
+
 #### select Auto (ZFS)
 #### press enter
 #### press enter
-#### tick drive 
+
+#### tick DRIVE 
+
 #### select YES
-#### root pass = root
+
+#### root pass
+# root
+# root
+
+#### skip over next steps
 #### select Cancel
 #### select NO
 #### whatever
 #### whatever
+
 #### select YES
 #### only tick dumpdev
+
+#### fk it reboot now or
 #### select NO
 #### select exit
 #### select NO
 #### select Reboot
 # --- REBOOT ---
-# zfs import usb 
+# zfs import USB
 # cd /usb/KERN/install/
 # /bin/sh /usb/KERN/install/1.INIT
 # perl /usb/KERN/install/2.PORT /usb
@@ -108,13 +191,13 @@ META
 # cp -R /usr/local/ /usr/ANONI/usr/local/
 # zpool export usb
 # zpool import usb -o altroot=/usr/ANONI/mnt usb
-##### cp /bin/* /usr/ANONI 
 # jail -c anoni
 # jexec 1 /bin/csh
 # perl usb/KERN/jinstall/1.WORLD /usb
 # perl usb/KERN/jinstall/2.ANONI /usb hostname
 # vim rc.conf
 # zpool export usb
+# reboot
 # --- REBOOT ---
 # zpool import usb
 # perl usb/KERN/install/4.POSTJAIL

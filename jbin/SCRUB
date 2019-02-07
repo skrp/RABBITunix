@@ -1,51 +1,42 @@
-) == 1
-			for m in values
-				if m =~ '^'.a:base
-					call add(res, m.';')
-				endif
-			endfor
-			return res
-		else
-			for m in values
-				if m =~? '^'.a:base
-					call add(res, m.';')
-				elseif m =~? a:base
-					call add(res2, m.';')
-				endif
-			endfor
-
-			return res + res2
-		endif
-
-	endif
-	if context =~ '>'
-		" Generally if context contains > it means we are outside of tag and
-		" should abandon action
-		return []
-	endif
-
-    " find tags matching with "a:base"
-	" If a:base contains white space it is attribute.
-	" It could be also value of attribute...
-	" We have to get first word to offer
-	" proper completions
-	if context == ''
-		let tag = ''
-	else
-		let tag = split(context)[0]
-	endif
-	" Get rid of namespace
-	let tag = substitute(tag, '^'.b:xml_namespace.':', '', '')
-
-
-	" Get last word, it should be attr name
-	let attr = matchstr(context, '.*\s\zs.*')
-	" Possible situations where any prediction would be difficult:
-	" 1. Events attributes
-	if context =~ '\s'
-
-		" If attr contains =\s*[\"'] we catched value of attribute
-		if attr =~ "=\s*[\"']" || attr =~ "=\s*$"
-			" Let do attribute specific completion
-			let attrname = matchstr(attr, '.*\ze\s*=')
-			let entered_value = matchstr(attr, ".*=\\s*[\"']\\?\\zs.*")
+#!/usr/local/bin/perl
+use strict; use warnings;
+use Digest::SHA;
+#######################################
+# SCRUB - output sha-stamped-lists
+#######################################
+my ($node, $pool, $log)=@ARGV;
+die "ARG1 node ARG2 location ARG3 log" unless (defined $log);
+$pool =~ s%/\z%%;
+my $date = time;
+my $stamp = $node.'_'.$date;
+my $error = $log.'_ERROR';
+#######################################
+open(my $efh, '>>', $error);
+open(my $nfh, '>', $new);
+opendir(my $dh, $dir) or die "FAIL opendir $dir";
+#######################################
+my @list = readdir $dh;
+closedir $dh; chomp @list;
+#######################################
+for (@list)
+{
+	my $file = $_;
+	$file =~ $pool.'/'.$file;
+	my $sha=file_digest($file) or die "FAIL sha $file";
+#######################################
+	$file =~ s/.*\///;
+#######################################
+      	if ($sha ne $file) 
+		{ print $efh "FAIL sha $node $file\n"; next; }
+#######################################	
+	print $nfh "$file $stamp\n";
+}
+#######################################
+sub file_digest 
+{
+    my ($filename)=@_;
+    my $digest=Digest::SHA->new(256);
+    $digest->addfile($filename, "b");
+    return $digest->hexdigest();
+}
+#######################################

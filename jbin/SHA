@@ -1,1 +1,31 @@
-', 'frac12', 'frac14', 'frac34', 'frasl', 'gamma', 'ge', 'gt', 'hArr', 'harr', 'hearts', 'hellip', 'iacute', 'icirc', 'iexcl', 'igrave', 'image', 'infin', 'int', 'iota', 'iquest', 'isin', 'iuml', 'kappa', 'lArr', 'lambda', 'lang', 'laquo', 'larr', 'lceil', 'ldquo', 'le', 'lfloor', 'lowast', 'loz', 'lrm', 'lsaquo', 'lsquo', 'lt', 'macr', 'mdash', 'micro', 'middot', 'minus', 'mu', 'nabla', 'nbsp', 'ndash', 'ne', 'ni', 'not', 'notin', 'nsub', 'ntilde', 'nu', 'oacute', 'ocirc', 'oelig', 'ograve', 'oline', 'omega', 'omicron', 'oplus', 'or', 'ordf', 'ordm', 'oslash', 'otilde', 'otimes', 'ouml', 'para', 'part', 'permil', 'perp', 'phi', 'pi', 'piv', 'plusmn', 'pound', 'prime', 'prod', 'prop', 'psi', 'quot', 'rArr', 'radic', 'rang', 'raquo', 'rarr', 'rceil', 'rdquo', 'real', 'reg', 'rfloor', 'rho', 'rlm', 'rsaquo', 'rsquo', 'sbquo', 'scaron', 'sdot', 'sect', 'shy', 'sigma', 'sigmaf', 'sim', 'spades', 'sub', '
+#!/usr/local/bin/perl
+use strict; use warnings;
+use File::Find::Rule;
+use Digest::SHA ();
+##########################
+# SHA - recursive file sha
+##########################
+my ($target, $shalog) = @ARGV;
+die "ARG1 target ARG2 log\n" unless (defined $shalong);
+##########################
+my %response; 
+my $rule;
+##########################
+open(my $lfh, '>>', $shalog) or die "couldn't open shalog argv[1]";
+# FIND FILES RECURSIVE #####
+$rule = File::Find::Rule->file()->start($target);
+%response;
+while(defined(my $file = $rule->match)) {
+    my ($sha) = file_digest($file) or die "couldn't sha $file";
+    $response{$file} = $sha;	
+}
+print $lfh "$value:  $key\n" while (my ($key, $value) = each %response);
+# SHA FN ###############
+sub file_digest 
+{
+    my ($filename) = @_;
+    my $digest = Digest::SHA->new(256);
+    $digest->addfile($filename, "b");
+    return $digest->hexdigest();
+}
+########################

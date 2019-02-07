@@ -1,2 +1,11 @@
-, 'strong', 'dfn', 'code', 'q', 'samp', 'kbd', 'var', 'cite', 'abbr', 'acronym', 'sub', 'sup', 'input', 'select', 'textarea', 'label', 'button', 'ins', 'del', 'script'],
-\ { 'ondblclick': [], 'onkeydown': [], 'onkeyup': [], 'onmouseup': [], 'id': [], 'o
+Protocol 2
+AddressFamily inet
+PermitRootLogin no
+StrictModes yes
+MaxAuthTries 2 
+AuthenticationMethods publickey
+AuthorizedKeysFile ".ssh/authorized_keys"
+PubkeyAuthentication yes
+PasswordAuthentication no
+ChallengeResponseAuthentication no 
+UsePam no 

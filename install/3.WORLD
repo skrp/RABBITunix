@@ -2,7 +2,7 @@
 use strict; use warnings;
 use File::Copy;
 ###########################
-# WORLD - buildworld 
+# WORLD - host buildworld 
 ###########################
 my ($usb, $node) = @ARGV;
 die "ARG1 /usb ARG2 node\n" unless (defined $node);
@@ -138,12 +138,12 @@ sub cr_key
 	`mkdir -p $idump`;
 ############################
 	my $pass;
-	my $cnt = 0;
-	while ($cnt < 5)
+	my $cnt4 = 0;
+	while ($cnt4 < 5)
 	{
 		my $in = int(rand(1000));
 		$pass .= " $in";
-		$cnt++;
+		$cnt4++;
 	}
 ############################
 	`ssh-keygen -q -N "$pass" -t rsa -b 2048 -f $key`;
@@ -185,10 +185,11 @@ sub neopass
 	{
 		$pass .= ' ' unless ($cnt2 == 0); 
 		my @set = `jot -r 5 0 27`;
-		$pass.=$p[$_] for (@set);
+		$pass.=[$_] for (@set);
 		$cnt2++;
 	}
 ############################
+	print "$pass\n";
 	return $pass;
 }
 print"\nFILES U MUST NOW EDIT: rc.conf  pf.conf resolv.conf jail.conf\n";

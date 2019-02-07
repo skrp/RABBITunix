@@ -1,4 +1,15 @@
-tyle': [], 'onmousemove': [], 'onmouseout': [], 'onmousedown': [], 'onkeypress': [], 'onclick': [], 'title': [], 'class': []}
-\ ],
-\ 'dt': [
-\ ['tt', 'i', 'b', 'u', 's', 'strike', 'big', 'small', 'em', 'strong', 'dfn', 'code', 'samp', 'kbd', 'var', 'cite', 'abbr', 'acronym', 'a', 'img', 'applet', 'object', 'font', 'basefont', 'br', 'script', 'map', 'q', 'sub', 'sup', 'span', 'bdo', 'iframe', 'input', 'select', 'textarea', 'label', 'button
+#!/usr/local/bin/perl
+use strict; use warnings;
+##################################
+# CNT - count files in pool
+##################################
+my ($dir) = @ARGV;
+die "ARG1 DIR" unless (defined $dir);
+##################################
+my $cnt=0;
+opendir(my $dh, $dir) or die "FAIL $dir\n";
+##################################
+$cnt++ while (readdir $dh);
+##################################
+print "$cnt\n";
+##################################

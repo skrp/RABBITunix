@@ -1,20 +1,28 @@
- From the full syntax listing, strip out the portion for the
-    " request group.
-    " Query:
-    "     \n           - must begin with a newline
-    "     a:group_name - the group name we are interested in
-    "     \s\+xxx\s\+  - group names are always followed by xxx
-    "     \zs          - start the match
-    "     .\{-}        - everything ...
-    "     \ze          - end the match
-    "     \(           - start a group or 2 potential matches
-    "     \n\w         - at the first newline starting with a character
-    "     \|           - 2nd potential match
-    "     \%$          - matches end of the file or string
-    "     \)           - end a group
-    let syntax_group = matchstr(a:syntax_full,
-                \ "\n".a:group_name.'\s\+xxx\s\+\zs.\{-}\ze\(\n\w\|\%$\)'
-                \ )
-
-    if syntax_group != ""
-        " let syn_list = substitute( @l, '^.*xxx\s*\%
+#!/usr/local/bin/perl
+##################################
+# UNIQ - cmp sha against uniq list
+##################################
+use strict; use warnings;
+my ($pmaster, $mmaster, $log) = @ARGV;
+die "ARG1 target ARG2 master ARG3 log\n" unless (defined $log);
+##################################
+my %master;
+##################################
+open(my $pfp, '<', $pmaster) or die ("Couldn't open partialmaster\n");
+open(my $mfp, '<', $mmaster) or die ("Couldn't open master\n");
+open(my $lfp, '>>', $log) or die;
+##################################
+my @pfile = readline $pfp; chomp @pfile;
+my @mfile = readline $mfp; chomp @mfile;
+##################################
+%master = map{$_ => undef} @mfile;
+##################################
+for (@pfile) 
+{
+	if (exists $master{$_}) 
+		{ next; }
+##################################
+	else 
+		{ print $lfp "$_\n"; }
+}
+##################################

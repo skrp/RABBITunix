@@ -4,8 +4,6 @@ use File::Copy;
 ############################
 # ANONI - anoni jail populate
 ############################
-# better clan assignment
-############################
 my ($usb, $node) = @ARGV;
 die "ARG1 /USB ARG2 HOSTNAME\n" unless (defined $node);
 $usb =~ s%/\z%%;
@@ -96,12 +94,12 @@ sub cr_key
 	`mkdir -p $idump`;
 ############################
 	my $pass;
-	my $cnt = 0;
-	while ($cnt < 5)
+	my $cnt1 = 0;
+	while ($cnt1 < 5)
 	{
 		my $in = int(rand(1000));
 		$pass .= " $in";
-		$cnt++;
+		$cnt1++;
 	}
 ############################
 	`ssh-keygen -q -N "$pass" -t rsa -b 2048 -f $key`;

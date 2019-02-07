@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 use strict; use warnings;
 ###########################
-# WORLD - buildworld 
+# WORLD - jail buildworld 
 ###########################
 # devfs ruleset
 ###########################
