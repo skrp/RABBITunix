@@ -173,6 +173,7 @@ CAPS - item a variable learnt from prior step
 #### select NO
 #### select Reboot
 # --- REBOOT ---
+# GENERIC_WORLD ###################
 # zfs import USB
 # cd /usb/KERN/install/
 # /bin/sh /usb/KERN/install/1.INIT
@@ -185,11 +186,13 @@ CAPS - item a variable learnt from prior step
 # make installkernel KERNCONF=KERN
 # rm -r /usr/obj
 # make -j2 buildworld
+# CUSTOM_WORLD ####################
 # make installworld
 # make installworld DESTDIR=/usr/ANONI
 # make distribution DESTDIR=/usr/ANONI
 # cp -R /usr/local/ /usr/ANONI/usr/local/
 # zpool export usb
+# SHADOW_WORLD ####################
 # zpool import usb -o altroot=/usr/ANONI/mnt usb
 # jail -c anoni
 # jexec 1 /bin/csh
@@ -199,7 +202,33 @@ CAPS - item a variable learnt from prior step
 # zpool export usb
 # reboot
 # --- REBOOT ---
-# zpool import usb
-# perl usb/KERN/install/4.POSTJAIL
-# perl usb/KERN/install/5.MAP
+# NORM_WORLD ######################
+##### login as con
+##### pass: con
+# hostname
+# uname -a
+# ifconfig
+# ls
+# cd
+# vim
+# less
+# TXN_$KEY
+# RABBIT_HOLE #####################
+# con@node /~$ cat msg > /p0p1/TED_DEMON
+#### msg = usb heir|norm
+#### DEMON -> usb -> node/heir -> /home/con/.ssh/id_rsa
+# con@node /~$ ssh heir@anoni
+# heir@anoni /~$ cat msg > /p0p1/TED_DEMON
+#### usb lord 
+#### DEMON -> usb -> lord -> /home/heir/.ssh/id_rsa
+# heir@anoni /~$ cat msg > DEMON
+#### DEMON -> usb -> node/heir -> /home/con/.ssh/id_rsa
+# heir@anoni /~$ ssh rabbit@node 
+# rabbit@node /~$ su
+# root@node /root$ perl usb/KERN/install/4.POSTJAIL
+# root@node /root$ perl usb/KERN/install/5.MAP
+# root@node /root$ echo 'your_initator_manifest' > /etc/pwnd
+###################################
+###################################
+###################################
 ###################################

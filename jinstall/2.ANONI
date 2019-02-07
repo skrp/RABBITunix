@@ -33,29 +33,9 @@ sub clan
 	$clan = 'heir' if ($rnum == 0);
 	return $clan;	
 }
-############################
-sub neopass
-{
-	my @p = qw(0 . 1 2 3 4 5 6 + 7 8 9 / * - q w e r a s d f z x c v);
-	my @set = `jot -r 5 0 27`;
-	my $pass;
-############################
-	my $cnt2 = 0;
-	while ($cnt2 < 5)
-	{
-		$pass .= ' ' unless ($cnt2 == 0); 
-		my @set = `jot -r 5 0 27`;
-		$pass.=$p[$_] for (@set);
-		$cnt2++;
-	}
-############################
-	return $pass;
-}
-############################
 sub cr_home
 {
 	my ($usr) = @_;
-############################
 	my $home = "/home/$usr/";
 	my $ssh = "$home.ssh";
 	`mkdir $home`;
@@ -77,7 +57,7 @@ sub cr_usr
 	`chown -R $usr $home`;
 	
 	my $clan = clan();
-	`pw usermod $usr -G $clan`;
+	`pw usermod -n $usr -G $clan`;
 	`echo '$usr' >> /root/clan/$clan`; 
 	print "$usr created\n";
 ############################
@@ -93,23 +73,36 @@ sub cr_key
 	my $remote = $key.'.pub';
 	`mkdir -p $idump`;
 ############################
-	my $pass;
-	my $cnt1 = 0;
-	while ($cnt1 < 5)
-	{
-		my $in = int(rand(1000));
-		$pass .= " $in";
-		$cnt1++;
-	}
+	my @pass = neopass();
 ############################
-	`ssh-keygen -q -N "$pass" -t rsa -b 2048 -f $key`;
+	`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $key`;
 ############################
 	copy($key, "$idump/id_rsa");
 	copy($remote, "$idump/known_hosts");
-	copy($remote, "/home/$usr/.ssh/authorized_keys");
-	`echo "$pass" > $idump/p`;
-############################
+	move($remote, "/home/$usr/.ssh/authorized_keys");
+	`echo "$pass[1]" > $idump/p`;
 	#`chmod -R 500 /home/$usr/.ssh/`;
 	print "$key created\n";
 }
+sub neopass
+{
+	my @p = qw(0 . 1 2 3 4 5 6 + 7 8 9 / * - q w e r a s d f z x c v);
+	my @pass;
+	my $cnt2 = 0;
+	while ($cnt2 < 4)
+	{
+		my @set = `jot -r 5 0 26`;
+		chomp @set;
+		for (@set)
+		{
+			no warnings 'uninitialized';	
+			$pass[0] .= $p[$_];
+			$pass[1] .= $p[$_];
+		}
+		$cnt2++;
+		$pass[1] .= ' ';
+	}
 ############################
+	chop $pass[1];
+	return @pass;
+}

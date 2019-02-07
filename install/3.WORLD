@@ -121,7 +121,7 @@ sub cr_usr
 	`chown -R $usr $home`;
 	
 	my $clan = clan();
-	`pw usermod $usr -G $clan`;
+	`pw usermod -n $usr -G $clan`;
 	`echo '$usr' >> /root/clan/$clan`; 
 	print "$usr created\n";
 ############################
@@ -137,21 +137,14 @@ sub cr_key
 	my $remote = $key.'.pub';
 	`mkdir -p $idump`;
 ############################
-	my $pass;
-	my $cnt4 = 0;
-	while ($cnt4 < 5)
-	{
-		my $in = int(rand(1000));
-		$pass .= " $in";
-		$cnt4++;
-	}
+	my @pass = neopass();
 ############################
-	`ssh-keygen -q -N "$pass" -t rsa -b 2048 -f $key`;
+	`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $key`;
 ############################
 	copy($key, "$idump/id_rsa");
 	copy($remote, "$idump/known_hosts");
-	copy($remote, "/usr/home/$usr/.ssh/authorized_keys");
-	`echo "$pass" > $idump/p`;
+	move($remote, "/usr/home/$usr/.ssh/authorized_keys");
+	`echo "$pass[1]" > $idump/p`;
 ############################
 	print "$key created\n";
 }
@@ -173,23 +166,26 @@ sub clan
 	my $clan = $clan[$rnum];
 	return $clan;	
 }
-############################
 sub neopass
 {
 	my @p = qw(0 . 1 2 3 4 5 6 + 7 8 9 / * - q w e r a s d f z x c v);
-	my @set = `jot -r 5 0 27`;
-	my $pass;
+	my @pass;
 ############################
 	my $cnt2 = 0;
-	while ($cnt2 < 5)
+	while ($cnt2 < 4)
 	{
-		$pass .= ' ' unless ($cnt2 == 0); 
-		my @set = `jot -r 5 0 27`;
-		$pass.=[$_] for (@set);
+		my @set = `jot -r 5 0 26`;
+		chomp @set;
+		for (@set)
+		{
+			no warnings 'uninitialized';	
+			$pass[0] .= $p[$_];
+			$pass[1] .= $p[$_];
+		}
 		$cnt2++;
+		$pass[1] .= ' ';
 	}
 ############################
-	print "$pass\n";
-	return $pass;
+	chop $pass[1];
+	return @pass;
 }
-print"\nFILES U MUST NOW EDIT: rc.conf  pf.conf resolv.conf jail.conf\n";
