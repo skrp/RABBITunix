@@ -9,15 +9,15 @@ die "ARG1 /usb ARG2 node\n" unless (defined $node);
 $usb =~ s%/\z%%;
 ###########################
 chdir("$usb/KERN/") or die "FAIL $usb\n";;
-`cp $usb/KERN/conf/.csh /root/`;
+`cp $usb/KERN/conf/.cshrc /root/`;
 `chown -R root /root/`;
 `chmod -R 700 /root/`;
-`rm /home/`;
+`rm /home`;
 ###########################
 `zfs create zroot/usr/ANONI`;
 `zfs create zroot/usr/ANONI/home`;
-`zfs create zroot/usr/ANONI/WORLD`;
-`zfs create zroot/usr/ANONI/CNT`;
+#`zfs create zroot/usr/ANONI/WORLD`;
+#`zfs create zroot/usr/ANONI/CNT`;
 `zfs create zroot/usr/ANONI/dump`;
 `mkdir /usr/ANONI/dump/pool`;
 `mkdir /usr/ANONI/dump/g`;
@@ -32,6 +32,7 @@ mkdir("/usr/ANONI/HIVE/BIO/");
 mkdir("/usr/ANONI/HIVE/TODO/");
 mkdir("/usr/ANONI/HIVE/FEED/");
 mkdir("/usr/ANONI/HIVE/FEED/norm");
+`chmod -R 777 /usr/ANONI/HIVE/FEED/norm`;
 `touch /usr/ANONI/HIVE/PING`;
 ###########################
 my (@bin) = glob("bin/*");
@@ -58,6 +59,12 @@ chomp @bin;
 `cp conf/login.conf /etc/login.conf`;
 `cp conf/exports /etc/exports`;
 ###########################
+`cp conf/hive /etc/rc.d/`;
+`chmod +x /etc/rc.d/hive`;
+###########################
+`mkdir -p /usr/local/etc/rc.d`
+`cp bin/DEMON_TED /usr/local/etc/rc.d/`;
+###########################
 my $hn = `hostname`; chomp $hn;
 `echo hostname='$hn' >> /etc/rc.conf`;
 ###########################
@@ -71,9 +78,9 @@ chdir("/");
 ###########################
 my $shell = '/bin/csh';
 my $home = "/usr/home/con/";
-my $cusb = "/usr/home/con/usb/";
+my $cs = "/usr/home/con/.ssh/";
 `mkdir $home`;
-`mkdir $cusb`;
+`mkdir $cs`;
 `cp $usb/KERN/conf/.cshrc $home`;
 `echo con | pw useradd -h 0 -n con -d $home -s $shell`;
 `chmod -R 700 $home`;
@@ -89,7 +96,8 @@ mkdir("/root/clan");
 ############################
 cr_home($_) for (@list);
 cr_usr($_) for (@list);
-cr_key($_, $node) for (@list);
+cr_key($node);
+#cr_key($_, $node) for (@list);
 ############################
 sub cr_home
 {
@@ -130,23 +138,35 @@ sub cr_usr
 ############################
 sub cr_key
 {
-	my ($usr, $node) = @_;
+	my ($node) = @_;
 ############################
-	my $idump = $usb."/BANK/host/$node/$usr";
-	my $key = "/usr/home/$usr/.ssh/id_rsa";
-	my $remote = $key.'.pub';
-	`mkdir -p $idump`;
+	for (@clan)
+	{
+		my $iclan = $_;
+		open(my $cfh, '<', "/root/clan/$iclan") or next;
+		my @ic = readline $cfh;
+		close $cfh; chomp @ic;
 ############################
-	my @pass = neopass();
+		for (@ic)
+		{
+			my $iu = $_;
+
+			my $idump = $usb."/BANK/host/$node/$iclan/$iu";
+			my $key = "/usr/home/$iu/.ssh/id_rsa";
+			my $pub = $key.'.pub';
 ############################
-	`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $key`;
+			`mkdir -p $idump`;
 ############################
-	copy($key, "$idump/id_rsa");
-	copy($remote, "$idump/known_hosts");
-	move($remote, "/usr/home/$usr/.ssh/authorized_keys");
-	`echo "$pass[1]" > $idump/p`;
+			my @pass = neopass();
+			`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $key`;
+			move($key, "$idump/id_rsa");
+			copy($pub, "$idump/known_hosts");
+			move($pub, "/usr/home/$iu/.ssh/authorized_keys");
+			`echo "$pass[1]" > $idump/p`;
 ############################
-	print "$key created\n";
+			print "$key created\n";
+		}
+	}
 }
 ############################
 sub cr_clan

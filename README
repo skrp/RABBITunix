@@ -117,15 +117,17 @@ LOG
 # or spam F? key
 # drop to BIOS
 # BIOS will reveal machine cpu
+# look for boot options
+# select usb device to boot
+# trial & error until the freeBSD demon displayed
 # curiousity & relentlessness rewards answer
-###################################
+# IMPORTANT #######################
 # -    raw command typed into interface
 #### - action 
 CAPS - item a variable learnt from prior step
 # INSTALL PROCEEDURE ##############
 #### set bios boot from usb
 #### boot FreeBSD install memstick
-#### press enter
 #### select Shell
 # camcontrol devlist
 #### this cmd returns all storage-devices
@@ -139,7 +141,9 @@ CAPS - item a variable learnt from prior step
 # ctrl-c
 
 # exit
+
 #### select Install
+#### select Select
 
 #### type hostname new-node-name
 
@@ -147,24 +151,22 @@ CAPS - item a variable learnt from prior step
 #### only have tick: doc src
 
 #### select Auto (ZFS)
-#### press enter
-#### press enter
+#### select Select
+#### select stripe
 
 #### tick DRIVE 
-
 #### select YES
 
 #### root pass
 # root
 # root
 
-#### skip over next steps
 #### select Cancel
 #### select NO
 #### whatever
 #### whatever
-
 #### select YES
+
 #### only tick dumpdev
 
 #### fk it reboot now or
@@ -199,6 +201,7 @@ CAPS - item a variable learnt from prior step
 # perl usb/KERN/jinstall/1.WORLD /usb
 # perl usb/KERN/jinstall/2.ANONI /usb hostname
 # vim rc.conf
+# exit
 # zpool export usb
 # reboot
 # --- REBOOT ---
