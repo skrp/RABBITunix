@@ -62,7 +62,7 @@ chomp @bin;
 `cp conf/hive /etc/rc.d/`;
 `chmod +x /etc/rc.d/hive`;
 ###########################
-`mkdir -p /usr/local/etc/rc.d`
+`mkdir -p /usr/local/etc/rc.d`;
 `cp bin/DEMON_TED /usr/local/etc/rc.d/`;
 ###########################
 my $hn = `hostname`; chomp $hn;

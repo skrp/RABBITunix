@@ -21,7 +21,9 @@
 # know nothing & learn much
 # REQUIREMENT #####################
 #   AMD64-machine
-#   $KEY usb-storage-device
+#   usb installer (freeBSD.10-3.AMD64.memstick.img)
+#   usb INIT
+#   usb-to-be-wiped 
 # LAOYERS #########################
 #    HARDWARE_LAYER   : AMD64
 #       mobo cpu mem drive psu montior keyboard
@@ -83,9 +85,9 @@
 BANK
    NET 
    PF_NET  
-      host/	
-         NODE/ 
-            usr/ p id_rsa.pub id_rsa 
+   host/	
+      NODE/ 
+         usr/ p id_rsa.pub id_rsa 
 KERN
    README
    bin/
@@ -131,8 +133,14 @@ CAPS - item a variable learnt from prior step
 #### select Shell
 # camcontrol devlist
 #### this cmd returns all storage-devices
-#### find storage-device to over-write 
+#### find storage-device & USB to over-write 
 #### DRIVE = storage-device 
+#### USB   = usb-device
+#### INIT = name of INIT USB
+#### NAME = think
+#### INIT = name of INIT USB
+#### ALFADATE = alffabet name
+#### in doubt, unplug usb & run command again to find missing
 
 # dd if=/dev/zero of=/dev/DRIVE bs=1M
 
@@ -140,18 +148,50 @@ CAPS - item a variable learnt from prior step
 #### to finish
 # ctrl-c
 
+#### be sure only node drive & INIT usb inserted
+
+# camcontrol devlist
+
+#### insert usb-to-be-wiped
+
+# camcontrol devlist
+
+#### find new entry 
+#### replace USB with device name
+>>>> ex: ada0 da1
+
+# dd if=/dev/zero of=/dev/USB bs=1M
+
+>>>> if=/dev/zero of=/dev/da1 bs=1M
+
+#### let it finish
+
+# zfs snapshot INIT/KERN@ALFADATE
+
+# zpool create NAME /dev/USB
+# zfs send INIT/KERN@ALFADATE | zfs recv NAME/KERN
+
+# zfs create NAME/BANK
+# zfs create NAME/LOG
+# zfs create NAME/META
+
+# mkdir /NAME/LOG/misc
+# mkdir /NAME/BANK/host/
+
+# zfs snapshot NAME/KERN@ALPHADATE
+# zpool export NAME
 # exit
 
 #### select Install
 #### select Select
 
-#### type hostname new-node-name
+#### hostname new-node-name
 
 #### tick via spacebar 
 #### only have tick: doc src
 
 #### select Auto (ZFS)
-#### select Select
+#### select Select (Install Proceed with Installation)
 #### select stripe
 
 #### tick DRIVE 
@@ -169,14 +209,15 @@ CAPS - item a variable learnt from prior step
 
 #### only tick dumpdev
 
-#### fk it reboot now or
 #### select NO
 #### select exit
 #### select NO
 #### select Reboot
+
+#### put away installer usb & INIT usb
 # --- REBOOT ---
 # GENERIC_WORLD ###################
-# zfs import USB
+# zpool import -f usb
 # cd /usb/KERN/install/
 # /bin/sh /usb/KERN/install/1.INIT
 # perl /usb/KERN/install/2.PORT /usb
@@ -203,6 +244,7 @@ CAPS - item a variable learnt from prior step
 # vim rc.conf
 # exit
 # zpool export usb
+# unplug usb
 # reboot
 # --- REBOOT ---
 # NORM_WORLD ######################
@@ -217,21 +259,28 @@ CAPS - item a variable learnt from prior step
 # less
 # TXN_$KEY
 # RABBIT_HOLE #####################
-# con@node /~$ cat msg > /p0p1/TED_DEMON
-#### msg = usb heir|norm
-#### DEMON -> usb -> node/heir -> /home/con/.ssh/id_rsa
-# con@node /~$ ssh heir@anoni
-# heir@anoni /~$ cat msg > /p0p1/TED_DEMON
-#### usb lord 
-#### DEMON -> usb -> lord -> /home/heir/.ssh/id_rsa
-# heir@anoni /~$ cat msg > DEMON
-#### DEMON -> usb -> node/heir -> /home/con/.ssh/id_rsa
-# heir@anoni /~$ ssh rabbit@node 
-# rabbit@node /~$ su
+#### plug in usb
+#### usr usb host clan
+# con@node /~$ echo 'con usb host wheel' > ~/ted
+# con@node /~$ cp ~/ted /usr/ANONI/HIVE/FEED/norm/ 
+#### wait for demon to wake up 10 min
+#### DEMON will mount usb and create a key directory in home ~/
+# cd
+# pwd
+# ls
+#### $KEY = dir name of remote usr
+#### host is the ip4 of host
+# cp $KEY/id_rsa ~/.ssh/
+# chmod -R 700 ~/
+# c
+# cat $KEY/p
+# ssh $KEY@host
+#### type contents of p with no spaces
+# ifconfig
+# su
+#### pass = root
+---- RABBIT ----
 # root@node /root$ perl usb/KERN/install/4.POSTJAIL
 # root@node /root$ perl usb/KERN/install/5.MAP
-# root@node /root$ echo 'your_initator_manifest' > /etc/pwnd
-###################################
-###################################
-###################################
+# root@node /root$ echo 'your_initator_manifest' >> /etc/motd
 ###################################
