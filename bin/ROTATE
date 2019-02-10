@@ -1,0 +1,44 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+###########################
+# ROTATE - monthly jail cycle
+###########################
+# month - net sha notary
+# 	- 3 weeks
+# 	- 10 jails
+# 	- $KEY buyback
+# week  - overwrite accessed users
+# 	- run next of four jails
+# 	- 10 days
+# 	- 100k $KEY
+# day - uninterrupted service
+# work - hours shell alive
+# MONTHLY #################
+# WEEKLY ##################
+jail_stop();
+jail_buyback();
+jail_fill();
+# DAILY ###################
+sunrise($day);
+sunset($day);
+# sub #####################
+sub sunrise
+{
+	my ($day) = shift;
+	`jail -c $day`;
+	notary($day);
+}
+###########################
+sub sunset
+{
+	my ($day) = shift;
+	DIM();
+	sleep 3600;
+	`jail -r $day`;
+	notary($day);
+}
+###########################
+###########################
+###########################
+###########################
+###########################
