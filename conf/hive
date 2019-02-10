@@ -5,4 +5,6 @@ rcvar=hive_enable
 #command="perl /bin/DEMON_TED"
 load_rc_config $name
 #run_rc_command "$1"
-perl /bin/DEMON_TED
+perl /usr/ANONI/HIVE/BIO/TED
+perl /usr/ANONI/HIVE/BIO/ALEX
+perl /usr/ANONI/HIVE/BIO/WUF

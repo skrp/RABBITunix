@@ -21,12 +21,16 @@ chdir("$usb/KERN/") or die "FAIL $usb\n";;
 `mkdir /CLAN/log/`;
 `mkdir /KRIP/norm/`;
 `mkdir /KRIP/lord/`;
+`mkdir /KRIP/filt/`;
+`mkdir /KRIP/sea/`;
 `chmod 550 /CLAN`;
 `chmod 770 /CLAN/pool/`;
 `chmod 770 /CLAN/src/`;
 `chmod 770 /CLAN/log/`;
 `chmod 770 /KRIP/norm/`;
 `chmod 770 /KRIP/lord/`;
+`chmod 770 /KRIP/filt/`;
+`chmod 730 /KRIP/sea/`;
 ###########################
 `zfs create zroot/usr/ANONI`;
 `zfs create zroot/usr/ANONI/home`;
@@ -38,8 +42,8 @@ chdir("$usb/KERN/") or die "FAIL $usb\n";;
 `chmod 333 /usr/ANONI/dump/pool`;
 `chmod 333 /usr/ANONI/dump/g`;
 ###########################
-`zfs create zroot/usr/nfs`;
-`zfs set sharenfs=on zroot/usr/nfs`;
+#`zfs create zroot/usr/nfs`;
+#`zfs set sharenfs=on zroot/usr/nfs`;
 ###########################
 `zfs create -o mountpoint=/usr/ANONI/HIVE zroot/HIVE`;
 mkdir("/usr/ANONI/HIVE/BIO/");
@@ -75,9 +79,7 @@ chomp @bin;
 ###########################
 `cp conf/hive /etc/rc.d/`;
 `chmod +x /etc/rc.d/hive`;
-###########################
-`mkdir -p /usr/local/etc/rc.d`;
-`cp bin/DEMON_TED /usr/local/etc/rc.d/`;
+`cp HIVE/* /usr/ANONI/HIVE/BIO/`;
 ###########################
 my $hn = `hostname`; chomp $hn;
 `echo hostname='$hn' >> /etc/rc.conf`;
@@ -111,7 +113,6 @@ mkdir("/root/clan");
 cr_home($_) for (@list);
 cr_usr($_) for (@list);
 cr_key($node);
-#cr_key($_, $node) for (@list);
 ############################
 sub cr_home
 {
@@ -170,9 +171,10 @@ sub cr_key
 			my $pub = $key.'.pub';
 ############################
 			`mkdir -p $idump`;
-############################
 			my @pass = neopass();
+############################
 			`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $key`;
+############################
 			move($key, "$idump/id_rsa");
 			copy($pub, "$idump/known_hosts");
 			move($pub, "/usr/home/$iu/.ssh/authorized_keys");

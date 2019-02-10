@@ -38,6 +38,12 @@ die "FAIL write BIO $!\n" unless (-w $BIO);
 die "FAIL write PING $!\n" unless (-w $PING);
 die "FAIL write FEED $!\n" unless (-w $FEED);
 die "FAIL write PING $!\n" unless (-w $PING);
+# PREP #######################
+my @blk;
+my $OP = 0;
+kup();
+krip();
+$SIG{INT} = \&sig;
 # LIVE #######################
 while (1)
 {
@@ -144,29 +150,31 @@ sub SUICIDE
 sub act
 {
 ############################
-	my $ndump = '/KRIP/norm/';
-	my $ldump = '/KRIP/lord/';
-	my $pdump = '/KRIP/pass/';
+	return if ($OP == 1);
+	$OP = 1;
+	krip();
 	my $tmp = '/KRIP/id_rsa';
 	my $ptmp = '/KRIP/id_rsa.pub';
 ############################
 	`ssh-keygen -q -N "" -t rsa -b 2048 -f $tmp`;
 	sleep 60;
 	my $nsha = file_digest($tmp);
-	move("$ndump$nsha", $tmp);
-	move("$ndump$nsha.pub", $ptmp);
-	unlink $tmp;
+	my $sdir = '/KRIP/norm/'.$nsha;
+	mkdir $sdir;
+	move("$sdir/", $tmp);
+	move("$sdir/", $ptmp);
 	$YAY++;
 ############################
 	my @pass = neopass();
 	`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $tmp`;
 	sleep 60;
 	my $lsha = file_digest($tmp);
-	move("$ldump$lsha", $tmp);
-	move("$ldump$lsha.pub", $ptmp);
-	`echo "$pass[1]" > $pdump$lsha`;
-	unlink $tmp;
+	my $ssdir = '/KRIP/lord/'.$lsha;
+	move("$ssdir/", $tmp);
+	move("$ssdir/", $ptmp);
+	`echo "$pass[1]" > $ssdir/p`;
 	$YAY++;
+	$OP = 0;
 ############################
 }
 sub neopass
@@ -198,4 +206,26 @@ sub file_digest
   my $digester = Digest::SHA->new('sha256');
   $digester->addfile( $file, 'b' );
   return $digester->hexdigest;
+}
+sub krip
+{
+	my $blk = shift @blk;
+	my $fb = "/KRIP/filt/$blk";
+# send tb thru bit-filter
+	`dd if=$fb of=/dev/random`;
+	unlink $fb;
+}
+sub kup
+{
+	opendir(my $idh, '/KRIP/filt/');
+	@blk = readdir $idh;
+	close $idh; chomp @blk;
+	shift @blk; shift @blk;
+}
+sub sig
+{
+	if ($OP == 1)
+		{ return if ($OP == 1); }
+	else
+		{ act(); }
 }

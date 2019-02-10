@@ -6,8 +6,8 @@ use POSIX;
 ##############################
 my $ted = "/usr/ANONI/HIVE/FEED/norm/ted";
 ##############################
-$SIG{INT} = \&act;
 my $OP = 0;
+$SIG{INT} = \&act;
 ##############################
 my $ROOT = '/usr/ANONI/HIVE/';
 my $PING = $ROOT.'PING';

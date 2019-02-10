@@ -139,7 +139,7 @@ sub act
 {
 	return 1 unless (-f $wuf);
 
-	open(my $tfh, '<', $wuf);
+	open(my $wfh, '<', $wuf);
 	my @item = readline $wfh;
 	close $wfh; chomp @item;
 

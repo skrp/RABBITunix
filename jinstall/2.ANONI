@@ -12,26 +12,22 @@ my $limit = 1000;
 my $shell = '/bin/csh';
 ############################
 my @list = 1..$limit;
-my @clan;
 ############################
 mkdir("/root/clan");
-cr_clan();
+my @clan = qw(norm princess princess);
+`pw groupadd $_` for (@clan);
 cr_home($_) for (@list);
 cr_usr($_) for (@list);
-cr_key($_, $node) for (@list);
+cr_key($node);
 `chown :norm /HIVE/FEED/norm`;
 ############################
-sub cr_clan
+sub grp
 {
-	my @clan = qw(norm heir);
-	`pw groupadd $_` for (@clan);
-}
-sub clan
-{
-	my $clan = 'norm';
+	my $grp = 'norm';
 	my $rnum = `jot -r 1 0 16`;
-	$clan = 'heir' if ($rnum == 0);
-	return $clan;	
+	$grp = 'prince' if ($rnum == 1);
+	$grp = 'princess' if ($rnum == 0);
+	return $grp;	
 }
 sub cr_home
 {
@@ -41,9 +37,7 @@ sub cr_home
 	`mkdir $home`;
 ############################
 	mkdir("$ssh");
-	`cp $usb/KERN/conf/.vimrc $home`;
-	`chown -R $usr $ssh`;
-	`chmod -R 700 $ssh`;
+#	`cp $usb/KERN/conf/.vimrc $home`;
 ############################
 	`cp $usb/KERN/conf/.cshrc $home`;
 }
@@ -57,32 +51,53 @@ sub cr_usr
 	`chown -R $usr $home`;
 	
 	my $clan = clan();
+	`pw usermod -n $usr -G wheel` if ($clan eq 'prince');
 	`pw usermod -n $usr -G $clan`;
 	`echo '$usr' >> /root/clan/$clan`; 
 	print "$usr created\n";
 ############################
-	`chmod -R 700 $home.ssh`;
 }
 ############################
 sub cr_key
 {
-	my ($usr, $node) = @_;
+	my ($node) = @_;
 ############################
-	my $idump = $usb."/BANK/host/$node/$usr";
-	my $key = "/home/$usr/.ssh/id_rsa";
-	my $remote = $key.'.pub';
-	`mkdir -p $idump`;
+	for (@clan)	
+	{
+		my $ic = shift;
+		open(my $ifh, '<', "/root/clan/$ic");
+		my @ic = readline $ifh;
+		close $ifh; chomp @ic;
+
+		for (@ic)
+		{
+			my $iu = $_;
+			my $idump = $usb."/BANK/host/$node/$ic/$iu";
+			my $key = "/home/$iu/.ssh/id_rsa";
+			my $pub = $key.'.pub';
+			`mkdir -p $idump`;
 ############################
-	my @pass = neopass();
+			if ($ic eq 'norm')	
+			{	
+				`ssh-keygen -q -N "" -t rsa -b 2048 -f $key`;
+				copy($key, "$idump/id_rsa");
+				copy($pub, "$idump/known_hosts");
+				move($pub, "/home/$iu/.ssh/authorized_keys");
+			}
 ############################
-	`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $key`;
-############################
-	copy($key, "$idump/id_rsa");
-	copy($remote, "$idump/known_hosts");
-	move($remote, "/home/$usr/.ssh/authorized_keys");
-	`echo "$pass[1]" > $idump/p`;
-	#`chmod -R 500 /home/$usr/.ssh/`;
-	print "$key created\n";
+			elsif ($ic eq 'prince' || $ic eq 'princess')	
+			{
+				my @pass = neopass();
+				`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $key`;
+				copy($key, "$idump/id_rsa");
+				copy($pub, "$idump/known_hosts");
+				move($pub, "/home/$iu/.ssh/authorized_keys");
+				`echo "$pass[1]" > $idump/p`;
+			}
+			`chmod -R 700 /home/$iu/.ssh/`;
+			print "$key created\n";
+		}
+	}
 }
 sub neopass
 {
