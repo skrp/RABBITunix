@@ -1,11 +1,13 @@
-TED - console $KEY shifter
-CAM - archivist 
+TED  - console $KEY shifter
+CAM  - archivist 
+IRO  - get
+WUF  - wakeup
+ALEX - krip
+
     - file digest
     - proxy
     - tar
-IRO - get
     - nmap
-    - krip
 KIKE    - p2p $KEY tunnels 
 JAIL    - chron jail rotate
 TEST    - usr trials

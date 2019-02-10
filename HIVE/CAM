@@ -211,7 +211,8 @@ sub rep
 sub XS
 {
   my ($file, $url_path) = @_;
-  my $sha = file_digest($file); print $Lfh "FAIL sha $file $!" if (!defined $sha);
+  my $sha = file_digest($file); 
+  print $Lfh "FAIL sha $file $!" if (!defined $sha);
 
   my $meta = $G.'g'.$sha;
   unless (eval { open(my $fh, '>>', $meta) })

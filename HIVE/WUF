@@ -2,12 +2,9 @@
 use strict; use warnings;
 use POSIX;
 ##############################
-# TED - console $KEY shift
+# WUF - wakeup DEMON
 ##############################
-my $ted = "/usr/ANONI/HIVE/FEED/norm/ted";
-##############################
-$SIG{INT} = \&act;
-my $OP = 0;
+my $wuf = "/usr/ANONI/HIVE/FEED/norm/wuf";
 ##############################
 my $ROOT = '/usr/ANONI/HIVE/';
 my $PING = $ROOT.'PING';
@@ -45,7 +42,8 @@ die "FAIL write PING $!\n" unless (-w $PING);
 # LIVE #######################
 while (1)
 {
-	sleep 1200 if (act() == 1);
+	sleep 60;
+	act();
 # SLEEP ######################
 	if (-e $SLEEP)
 	{
@@ -139,50 +137,18 @@ sub SUICIDE
 }
 sub act
 {
-	return 1 unless (-f $ted);
-	return 1 if ($OP == 1);
-	$OP = 1;
-	open(my $tfh, '<', $ted);
-	my @item = readline $tfh;
-	close $tfh; chomp @item;
+	return 1 unless (-f $wuf);
 
-	unlink $ted;
+	open(my $tfh, '<', $wuf);
+	my @item = readline $wfh;
+	close $wfh; chomp @item;
 
-	my ($usr, $pool, $node, $clan, $cnt) = split(" ", $item[0]);
-	my $udir;
+	unlink $wuf;
 
-	next unless (defined $cnt);
-
-	if ($clan eq 'norm' || $clan eq 'heir')
-		{ $udir = "/usr/ANONI/home/$usr"; }
-	else
-		{ $udir = "/usr/home/$usr"; }
-
-	`/bin/EXP $pool`;
-	sleep 120;
-
-	my $dir = "/tmp/$pool/BANK/host/$node/$clan/";
-	`/bin/IMP $pool`;
-	sleep 120;
-
-	opendir(my $dh, $dir);
-	my @dir = readdir $dh;	
-	shift @dir; shift @dir;
-
-	while ($cnt > 0) 
-	{
-		my $KEY = shift @dir;
-		my $kdir =  $dir.$KEY;
-		`mv $kdir $udir`;
-		$cnt--;
-	}
-	`chmod -R 700 $udir`;
-	`chown -R $usr $udir`;
-
-	`/bin/EXP $pool`;
-
-	sleep 300;
-	$OP = 0;
-	$YAY++;
-	return 0;
+	my ($demon) = split(" ", $item[0]);
+	if (defined $item[1] || $demon ne 'TED')
+		{ $FAIL++; return; }
+	
+	my $ipid = `ps -a | grep TED | head -n 1 | sed s'/ .*//'`;
+	kill('INT', $ipid);
 }

@@ -85,7 +85,8 @@
 # USB #############################
 BANK
    NET 
-   PF_NET  
+   PF_NET
+   CLAN 
    host/	
       NODE/ 
          usr/ p id_rsa.pub id_rsa 
@@ -241,6 +242,7 @@ CAPS - item a variable learnt from prior step
 # SHADOW_WORLD ####################
 # zpool import usb -o altroot=/usr/ANONI/mnt usb
 # jail -c anoni
+# jls
 # jexec 1 /bin/csh
 # perl usb/KERN/jinstall/1.WORLD /usb
 # perl usb/KERN/jinstall/2.ANONI /usb hostname
@@ -295,6 +297,9 @@ CAPS - item a variable learnt from prior step
 /tmp/
 /CLAN/         clan REP
 /KRIP/         pools of unassigned $KEY
+/KRIP/norm     mined $KEY named after sha256
+/KRIP/lord     mined $KEY named after sha256
+/KRIP/pass     pass named after sha256
 /usr/home/     lord home dir
 /usr/pool/      scp
 /usr/ANONI/
@@ -326,6 +331,12 @@ devfs ruleset host/jail
 chmod / general hardening
 ports / mods
 # REP #############################
+/CLAN/pool/ - host file pool 
+/CLAN/src/  - host system src 
+/CLAN/log/  - host log 
+append-only clan files 
+line { sha256 timestamp location clan }
+
 usr enhances code
 places it for upload
 all sys REP++ CLAN
@@ -336,23 +347,20 @@ digest of all files
 concatenate CLAN repfile
 if unique $KEY rewarded
 
+clan notary: log, file-index, TXN-witness
+retrace simple if subsequent review flag-bad 
+
 network verify & index
 relative $KEY dividend
-
-LIST_f - digest clan
-LIST_s - file clan
-LIST_l - log clan
-	clan stamps: log, file-index, TXN-witness
-	retrace simple if subsequent review flag-bad 
-
 REP++ CLAN monthly
 CLAN TXN REP for zfs quota increase
 CLAN TXN REP new clan
 $KEY distributed in clan chests
 	usr -> con -> ssh node -> clan -> chest -> BANK_ID
 	BANK -> $KEY -> tunnels -> BANK_ID -> usb
-
-node_pwn gets network double-clan creation
+# LINK ############################
+new_node KIKE {clan} -> node_x KIKE
+node_x -> add_clan add_xclan -> $KEY deposit
 # PVP #############################
 pvp - process vs process
 	kill9 nukes, nice-hits, node-black-list
@@ -376,7 +384,24 @@ DEMON need much sleep
 actions take time
 harvest emphasis 
 multi-terminal emphasis
-# $KEY ############################
-pass       : console
+# AUTHENTICATION  #################
+pass       : root
+pass       : con
 OTOPSK     : scp norm
-OTOPSK & printed-pass : lords 
+OTOPSK & printed-pass : lord heir
+# HIVE ############################
+TED  - console $KEY shift
+CAM  - archivist 
+IRO  - get
+WUF  - wakeup
+ALEX - krip
+
+    - file digest
+    - proxy
+    - tar
+    - nmap
+KIKE    - p2p $KEY tunnels 
+JAIL    - chron jail rotate
+TEST    - usr trials
+MAID    - host cleanup
+

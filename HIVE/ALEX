@@ -1,13 +1,9 @@
 #!/usr/local/bin/perl
 use strict; use warnings;
 use POSIX;
+use Digest::SHA;
 ##############################
-# TED - console $KEY shift
-##############################
-my $ted = "/usr/ANONI/HIVE/FEED/norm/ted";
-##############################
-$SIG{INT} = \&act;
-my $OP = 0;
+# ALEX - $KEY miner
 ##############################
 my $ROOT = '/usr/ANONI/HIVE/';
 my $PING = $ROOT.'PING';
@@ -45,11 +41,19 @@ die "FAIL write PING $!\n" unless (-w $PING);
 # LIVE #######################
 while (1)
 {
-	sleep 1200 if (act() == 1);
+	my $rs = `jot -r 1 1500 3600`;
+	sleep $rs;
+	my $i = 0;
+	while ($i < 20)
+	{
+		act();
+		sleep 60;
+		$i++;
+	}
 # SLEEP ######################
 	if (-e $SLEEP)
 	{
-			my @QUE; $QUE[0]='ted';
+			my @QUE; $QUE[0]='alex';
 			tombstone($YAY, $FAIL);
 			SLEEP($YAY, $FAIL, @QUE);
 	}
@@ -139,50 +143,59 @@ sub SUICIDE
 }
 sub act
 {
-	return 1 unless (-f $ted);
-	return 1 if ($OP == 1);
-	$OP = 1;
-	open(my $tfh, '<', $ted);
-	my @item = readline $tfh;
-	close $tfh; chomp @item;
-
-	unlink $ted;
-
-	my ($usr, $pool, $node, $clan, $cnt) = split(" ", $item[0]);
-	my $udir;
-
-	next unless (defined $cnt);
-
-	if ($clan eq 'norm' || $clan eq 'heir')
-		{ $udir = "/usr/ANONI/home/$usr"; }
-	else
-		{ $udir = "/usr/home/$usr"; }
-
-	`/bin/EXP $pool`;
-	sleep 120;
-
-	my $dir = "/tmp/$pool/BANK/host/$node/$clan/";
-	`/bin/IMP $pool`;
-	sleep 120;
-
-	opendir(my $dh, $dir);
-	my @dir = readdir $dh;	
-	shift @dir; shift @dir;
-
-	while ($cnt > 0) 
-	{
-		my $KEY = shift @dir;
-		my $kdir =  $dir.$KEY;
-		`mv $kdir $udir`;
-		$cnt--;
-	}
-	`chmod -R 700 $udir`;
-	`chown -R $usr $udir`;
-
-	`/bin/EXP $pool`;
-
-	sleep 300;
-	$OP = 0;
+############################
+	my $ndump = '/KRIP/norm/';
+	my $ldump = '/KRIP/lord/';
+	my $pdump = '/KRIP/pass/';
+	my $tmp = '/KRIP/id_rsa';
+	my $ptmp = '/KRIP/id_rsa.pub';
+############################
+	`ssh-keygen -q -N "" -t rsa -b 2048 -f $tmp`;
+	sleep 60;
+	my $nsha = file_digest($tmp);
+	move("$ndump$nsha", $tmp);
+	move("$ndump$nsha.pub", $ptmp);
+	unlink $tmp;
 	$YAY++;
-	return 0;
+############################
+	my @pass = neopass();
+	`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $tmp`;
+	sleep 60;
+	my $lsha = file_digest($tmp);
+	move("$ldump$lsha", $tmp);
+	move("$ldump$lsha.pub", $ptmp);
+	`echo "$pass[1]" > $pdump$lsha`;
+	unlink $tmp;
+	$YAY++;
+############################
+}
+sub neopass
+{
+	my @p = qw(0 . 1 2 3 4 5 6 + 7 8 9 / * - q w e r a s d f z x c v);
+	my @pass;
+############################
+	my $cnt2 = 0;
+	while ($cnt2 < 4)
+	{
+		my @set = `jot -r 5 0 26`;
+		chomp @set;
+		for (@set)
+		{
+			no warnings 'uninitialized';	
+			$pass[0] .= $p[$_];
+			$pass[1] .= $p[$_];
+		}
+		$cnt2++;
+		$pass[1] .= ' ';
+	}
+############################
+	chop $pass[1];
+	return @pass;
+}
+sub file_digest
+{
+  my ($file) = @_;
+  my $digester = Digest::SHA->new('sha256');
+  $digester->addfile( $file, 'b' );
+  return $digester->hexdigest;
 }

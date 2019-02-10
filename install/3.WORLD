@@ -14,9 +14,21 @@ chdir("$usb/KERN/") or die "FAIL $usb\n";;
 `chmod -R 700 /root/`;
 `rm /home`;
 ###########################
+`zfs create zroot/CLAN`;
+`zfs create zroot/KRIP`;
+`mkdir /CLAN/pool/`;
+`mkdir /CLAN/src/`;
+`mkdir /CLAN/log/`;
+`mkdir /KRIP/norm/`;
+`mkdir /KRIP/lord/`;
+`chmod 550 /CLAN`;
+`chmod 770 /CLAN/pool/`;
+`chmod 770 /CLAN/src/`;
+`chmod 770 /CLAN/log/`;
+`chmod 770 /KRIP/norm/`;
+`chmod 770 /KRIP/lord/`;
+###########################
 `zfs create zroot/usr/ANONI`;
-`zfs create zroot/usr/REP`;
-`chmod 770 /usr/REP`;
 `zfs create zroot/usr/ANONI/home`;
 #`zfs create zroot/usr/ANONI/WORLD`;
 #`zfs create zroot/usr/ANONI/CNT`;
