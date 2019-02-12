@@ -7,19 +7,32 @@ use File::Copy;
 my ($usb, $node) = @ARGV;
 die "ARG1 /USB ARG2 HOSTNAME\n" unless (defined $node);
 $usb =~ s%/\z%%;
-############################
-my $limit = 1000;
+# GLOBAL ###################
 my $shell = '/bin/csh';
-############################
+my $limit = 100;
 my @list = 1..$limit;
+# PASSBUTTONS ##############
+my @p = qw(0 . 1 2 3 4 5 6 + 7 8 9 / * - q w e r a s d f z x c v);
 ############################
-mkdir("/root/clan");
-my @clan = qw(norm princess princess);
-`pw groupadd $_` for (@clan);
+my @grp = qw(norm prince princess);
+`pw groupadd $_` for (@grp);
+mkdir("/root/grp");
+my ($nfh, $pfh, $psfh) = g_list();
+mkdir("$usb/BANK/host/$node/$_/") for @grp;
+############################
 cr_home($_) for (@list);
 cr_usr($_) for (@list);
+close $nfh; close $pfh; close $psfh;
 cr_key($node);
 `chown :norm /HIVE/FEED/norm`;
+############################
+sub g_list
+{
+	 open(my $nfh, '>>', "/root/grp/norm");
+	 open(my $pfh, '>>', "/root/grp/prince");
+	 open(my $psfh, '>>', "/root/grp/princess");
+	 return ($nfh, $pfh, $psfh);
+}
 ############################
 sub grp
 {
@@ -34,12 +47,14 @@ sub cr_home
 	my ($usr) = @_;
 	my $home = "/home/$usr/";
 	my $ssh = "$home.ssh";
-	`mkdir $home`;
+	my $udir = $home.'usb';
 ############################
+	mkdir("$home");
 	mkdir("$ssh");
-#	`cp $usb/KERN/conf/.vimrc $home`;
+	mkdir("$udir");
+#	$usb/KERN/conf/.vimrc $home`;
 ############################
-	`cp $usb/KERN/conf/.cshrc $home`;
+	copy("$usb/KERN/conf/.cshrc","$home");
 }
 ############################
 sub cr_usr
@@ -47,61 +62,71 @@ sub cr_usr
 	my ($usr) = @_;
 	my $home = "/home/$usr/";
 	`pw useradd -n $usr -d $home -s $shell`;
-	`chmod -R 700 $home`;
-	`chown -R $usr $home`;
 	
-	my $clan = clan();
-	`pw usermod -n $usr -G wheel` if ($clan eq 'prince');
-	`pw usermod -n $usr -G $clan`;
-	`echo '$usr' >> /root/clan/$clan`; 
+	my $grp = grp();
+	`pw usermod -n $usr -G wheel` if ($grp eq 'prince');
+	`pw usermod -n $usr -G $grp`;
+	if ($grp eq 'norm')
+		{ print $nfh "$usr\n"; }
+	elsif ($grp eq 'prince')
+		{ print $pfh "$usr\n"; }
+	elsif ($grp eq 'princess')
+		{ print $psfh "$usr\n"; }
+	else 
+		{ print "FAIL $grp\n"; }
 	print "$usr created\n";
 ############################
 }
 ############################
 sub cr_key
 {
-	my ($node) = @_;
+	my ($node) = shift;
 ############################
-	for (@clan)	
+############################
+	for (@grp)	
 	{
-		my $ic = shift;
-		open(my $ifh, '<', "/root/clan/$ic");
-		my @ic = readline $ifh;
-		close $ifh; chomp @ic;
+		my $i_grp = $_;
+		my $g_file = "/root/grp/$i_grp";
+		open(my $gfh, '<', $g_file);
+		my @i_u = readline $gfh;
+		close $gfh; chomp @i_u;
 
-		for (@ic)
+		for (@i_u)
 		{
-			my $iu = $_;
-			my $idump = $usb."/BANK/host/$node/$ic/$iu";
-			my $key = "/home/$iu/.ssh/id_rsa";
+			my $i_usr = $_;
+			my $idump = "$usb/BANK/host/$node/$i_grp/$i_usr";
+			my $key = "/home/$i_usr/.ssh/id_rsa";
 			my $pub = $key.'.pub';
-			`mkdir -p $idump`;
+			mkdir("$idump");
 ############################
-			if ($ic eq 'norm')	
+			if ($i_grp eq 'norm')	
 			{	
 				`ssh-keygen -q -N "" -t rsa -b 2048 -f $key`;
 				copy($key, "$idump/id_rsa");
 				copy($pub, "$idump/known_hosts");
-				move($pub, "/home/$iu/.ssh/authorized_keys");
+				move($pub, "/home/$i_usr/.ssh/authorized_keys");
 			}
 ############################
-			elsif ($ic eq 'prince' || $ic eq 'princess')	
+			elsif ($i_grp eq 'prince' || $i_grp eq 'princess')	
 			{
 				my @pass = neopass();
 				`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $key`;
 				copy($key, "$idump/id_rsa");
 				copy($pub, "$idump/known_hosts");
-				move($pub, "/home/$iu/.ssh/authorized_keys");
+				move($pub, "/home/$i_usr/.ssh/authorized_keys");
 				`echo "$pass[1]" > $idump/p`;
 			}
-			`chmod -R 700 /home/$iu/.ssh/`;
+			else 
+				{ print "FAIL $i_grp\n"; }	
+# PERMISSION ###############
+			`chown -R $i_usr /home/$i_usr`;
+			`chmod -R 700 /home/$i_usr`;
 			print "$key created\n";
 		}
 	}
 }
 sub neopass
 {
-	my @p = qw(0 . 1 2 3 4 5 6 + 7 8 9 / * - q w e r a s d f z x c v);
 	my @pass;
 	my $cnt2 = 0;
 	while ($cnt2 < 4)
@@ -121,3 +146,4 @@ sub neopass
 	chop $pass[1];
 	return @pass;
 }
+

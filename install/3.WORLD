@@ -7,40 +7,42 @@ use File::Copy;
 my ($usb, $node) = @ARGV;
 die "ARG1 /usb ARG2 node\n" unless (defined $node);
 $usb =~ s%/\z%%;
-###########################
 chdir("$usb/KERN/") or die "FAIL $usb\n";;
-`cp $usb/KERN/conf/.cshrc /root/`;
+# PASSBUTTON ##############
+my @p = qw(0 . 1 2 3 4 5 6 + 7 8 9 / * - q w e r a s d f z x c v);
+# ROOT ####################
+copy("$usb/KERN/conf/.cshrc",'/root/');
 `chown -R root /root/`;
 `chmod -R 700 /root/`;
-`rm /home`;
+unlink '/home';
 ###########################
-`zfs create zroot/CLAN`;
-`zfs create zroot/KRIP`;
-`mkdir /CLAN/pool/`;
-`mkdir /CLAN/src/`;
-`mkdir /CLAN/log/`;
-`mkdir /KRIP/norm/`;
-`mkdir /KRIP/lord/`;
-`mkdir /KRIP/filt/`;
-`mkdir /KRIP/sea/`;
-`chmod 550 /CLAN`;
-`chmod 770 /CLAN/pool/`;
-`chmod 770 /CLAN/src/`;
-`chmod 770 /CLAN/log/`;
-`chmod 770 /KRIP/norm/`;
-`chmod 770 /KRIP/lord/`;
-`chmod 770 /KRIP/filt/`;
-`chmod 730 /KRIP/sea/`;
+mkdir '/CLAN';
+mkdir '/KRIP';
+mkdir '/CLAN/pool/';
+mkdir '/CLAN/src/';
+mkdir '/CLAN/log/';
+mkdir '/KRIP/norm/';
+mkdir '/KRIP/lord/';
+mkdir '/KRIP/filt/';
+mkdir '/KRIP/sea/';
+chmod(550,'/CLAN');
+chmod(770,'/CLAN/pool/');
+chmod(770,'/CLAN/src/');
+chmod(770,'/CLAN/log/');
+chmod(770,'/KRIP/norm/');
+chmod(770,'/KRIP/lord/');
+chmod(770,'/KRIP/filt/');
+chmod(730,'/KRIP/sea/');
 ###########################
 `zfs create zroot/usr/ANONI`;
 `zfs create zroot/usr/ANONI/home`;
 #`zfs create zroot/usr/ANONI/WORLD`;
 #`zfs create zroot/usr/ANONI/CNT`;
 `zfs create zroot/usr/ANONI/dump`;
-`mkdir /usr/ANONI/dump/pool`;
-`mkdir /usr/ANONI/dump/g`;
-`chmod 333 /usr/ANONI/dump/pool`;
-`chmod 333 /usr/ANONI/dump/g`;
+mkdir '/usr/ANONI/dump/pool';
+mkdir '/usr/ANONI/dump/g';
+chmod(333,'/usr/ANONI/dump/pool/');
+chmod(333,'/usr/ANONI/dump/g/');
 ###########################
 #`zfs create zroot/usr/nfs`;
 #`zfs set sharenfs=on zroot/usr/nfs`;
@@ -50,34 +52,32 @@ mkdir("/usr/ANONI/HIVE/BIO/");
 mkdir("/usr/ANONI/HIVE/TODO/");
 mkdir("/usr/ANONI/HIVE/FEED/");
 mkdir("/usr/ANONI/HIVE/FEED/norm");
-`chmod -R 777 /usr/ANONI/HIVE/FEED/norm`;
+`chmod -R 777 '/usr/ANONI/HIVE/FEED/norm'`;
 `touch /usr/ANONI/HIVE/PING`;
 ###########################
-my (@bin) = glob("bin/*");
-chomp @bin;
-`cp $_ /bin/` for (@bin);
+`cp bin/* /bin/`;
 ###########################
-`cp ../BANK/pf_net /etc/pf_net`;
+copy('../BANK/pf_net','/etc/pf_net');
 #`cp conf/fstab /etc/fstab`;
-`cp conf/src.conf /etc/src.conf`;
-`cp conf/make.conf /etc/make.conf`;
-`cp conf/motd /etc/`;
-`cp conf/purgehost /etc/`;
-`cp conf/pf.conf /etc/pf.conf`;
-`cp conf/ntpd.conf /usr/local/etc/ntpd.conf`;
-`cp conf/rc.conf /etc/rc.conf`;
+#copy(/etc/src.conf', 'conf/src.conf');
+copy('conf/make.conf','/etc/');
+copy('conf/motd','/etc/');
+copy('conf/purgehost','/etc/');
+copy('conf/pf.conf','/etc/');
+copy('conf/ntpd.conf','/usr/local/etc/ntpd.conf');
+copy('conf/rc.conf','/etc/');
 #`cp conf/resolv.conf /etc/resolv.conf`;
-`cp conf/sshd_config /etc/ssh/sshd_config`;
+copy('conf/sshd_config','/etc/ssh/sshd_config');
 #`cp conf/start_if.em0 /etc/start_if.em0`;
 #`cp conf/start_if.re0 /etc/start_if.re0`;
-`cp conf/ttys /etc/ttys`;
-`cp conf/KERN /usr/src/sys/amd64/conf/KERN`;
-`cp conf/sysctl.conf /etc/sysctl.conf`;
-`cp conf/jail.conf /etc/jail.conf`;
-`cp conf/login.conf /etc/login.conf`;
-`cp conf/exports /etc/exports`;
+copy('conf/ttys', '/etc/');
+copy('conf/KERN','/usr/src/sys/amd64/conf/KERN');
+copy('conf/sysctl.conf','/etc');
+copy('conf/jail.conf','/etc/');
+copy('conf/login.conf','/etc/');
+copy('conf/exports','/etc/');
 ###########################
-`cp conf/hive /etc/rc.d/`;
+copy('conf/hive', '/etc/rc.d/hive');
 `chmod +x /etc/rc.d/hive`;
 `cp HIVE/* /usr/ANONI/HIVE/BIO/`;
 ###########################
@@ -95,9 +95,9 @@ chdir("/");
 my $shell = '/bin/csh';
 my $home = "/usr/home/con/";
 my $cs = "/usr/home/con/.ssh/";
-`mkdir $home`;
-`mkdir $cs`;
-`cp $usb/KERN/conf/.cshrc $home`;
+mkdir $home;
+mkdir $cs;
+copy("$usb/KERN/conf/.cshrc","$home");
 `echo con | pw useradd -h 0 -n con -d $home -s $shell`;
 `chmod -R 700 $home`;
 `chown -R con $home`;
@@ -105,10 +105,10 @@ my $cs = "/usr/home/con/.ssh/";
 # HEIR #####################
 # rabbit -> con_host -> ANONI_jail -> heir_jail -> rabbit_host -> root 
 ############################
-my @clan = cr_clan();
+my @grp = cr_grp();
 my $limit = 1000;
 my @list = 1..$limit;
-mkdir("/root/clan");
+mkdir("/root/grp");
 ############################
 cr_home($_) for (@list);
 cr_usr($_) for (@list);
@@ -119,20 +119,14 @@ sub cr_home
 	my ($usr) = @_;
 ############################
 	my $home = "/usr/home/$usr/";
-	`mkdir $home`;
+	mkdir $home;
 ############################
+	#copy($home, "$usb/KERN/conf/.vimrc $home");
 	my $ssh = $home.'.ssh/';
-	my $auth = $usb.'/BANK/authorized_keys';
-	my $nauth = $ssh.'authorized_keys';
-
 	mkdir("$ssh");
-	copy($auth, $ssh); 
-
-	`cp $usb/KERN/conf/.vimrc $home`;
-
 	`chown -R $usr $ssh`;
 ############################
-	`cp $usb/KERN/conf/.cshrc $home`;
+	copy("$usb/KERN/conf/.cshrc","$home");
 }
 ############################
 sub cr_usr
@@ -143,9 +137,9 @@ sub cr_usr
 	`chmod -R 700 $home`;
 	`chown -R $usr $home`;
 	
-	my $clan = clan();
-	`pw usermod -n $usr -G $clan`;
-	`echo '$usr' >> /root/clan/$clan`; 
+	my $grp = grp();
+	`pw usermod -n $usr -G $grp`;
+	`echo '$usr' >> /root/grp/$grp`; 
 	print "$usr created\n";
 ############################
 	`chmod -R 700 $home.ssh`;
@@ -155,10 +149,10 @@ sub cr_key
 {
 	my ($node) = @_;
 ############################
-	for (@clan)
+	for (@grp)
 	{
-		my $iclan = $_;
-		open(my $cfh, '<', "/root/clan/$iclan") or next;
+		my $igrp = $_;
+		open(my $cfh, '<', "/root/grp/$igrp") or next;
 		my @ic = readline $cfh;
 		close $cfh; chomp @ic;
 ############################
@@ -166,7 +160,7 @@ sub cr_key
 		{
 			my $iu = $_;
 
-			my $idump = $usb."/BANK/host/$node/$iclan/$iu";
+			my $idump = $usb."/BANK/host/$node/$igrp/$iu";
 			my $key = "/usr/home/$iu/.ssh/id_rsa";
 			my $pub = $key.'.pub';
 ############################
@@ -185,26 +179,25 @@ sub cr_key
 	}
 }
 ############################
-sub cr_clan
+sub cr_grp
 {
 	my @c = qw(wheel clan rep world pf zfs usb hive src);
 ############################
-	push(@clan, $_) for (@c);
-	push(@clan, "x$_") for (@c);
+	push(@grp, $_) for (@c);
+	push(@grp, "x$_") for (@c);
 ############################
-	`pw groupadd $_` for (@clan);
-	return @clan;
+	`pw groupadd $_` for (@grp);
+	return @grp;
 ############################
 }
-sub clan
+sub grp
 {
 	my $rnum = `jot -r 1 0 16`;
-	my $clan = $clan[$rnum];
-	return $clan;	
+	my $grp = $grp[$rnum];
+	return $grp;
 }
 sub neopass
 {
-	my @p = qw(0 . 1 2 3 4 5 6 + 7 8 9 / * - q w e r a s d f z x c v);
 	my @pass;
 ############################
 	my $cnt2 = 0;
