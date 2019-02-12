@@ -3,93 +3,106 @@
 #                              to0j
 ###################################
 # INTRO ###########################
-# journey to the land of unix
-# experience C & shell & perl 
+journey to the land of unix
+experience C & shell & perl 
 
-# ways of deep-sea secrets  
-# raw-power of binary logic
+ways of deep-sea secrets  
+raw-power of binary logic
 
-# this ordeal 
-# reward 1337
+this ordeal 
+reward 1337
 
-# hard for all
-# way to wizard
+hard for all
+way to wizard
 
-# are you
-# ready to go?
+are you
+ready to go?
 ###################################
-# README will prove you
-# know nothing & learn much
-# REQUIREMENT #####################
-#   AMD64-machine
-#   usb installer (freeBSD.10-3.AMD64.memstick.img)
-#   usb INIT
-#   usb-to-be-wiped 
-# LAOYERS #########################
-#    HARDWARE_LAYER   : AMD64
-#       mobo cpu mem drive psu montior keyboard
-#       library of raw actions to cpu
-#    SOFTWARE_LAYER   : FreeBSD unix kernels 
-#       mechanisation of actions to HARDWARE_LAYER
-#       system-enviornment
-#    INTERFACE_LAYER : shell c-libraries perl-libraries
-#	permission-based access to SOFTWARE_LAYER
-#       usr interactions with system-enviornment
-#    NETWORK_LAYER   : IPv4 ethernet & wifi end-points
-#       direct encrypted tunnels amongst IPv4 connected-nodes
-#       traffic-relay from one to any in obfuscated fashion 
-#           ex: usr->ANONI_A -> ANONI_D -> ANONI_J -> sleep 
-#               ANONI_J -> ANONI_F -> ANONI_V -> sleep -> action 
-# GUARENTE ########################
-# simple uniform-standardization
-# encourage plain understanding 
-# purchase the truth if anonymous
-# all usr accounts deleted after first access
-# OTOPSK counter man-in-the-middle
-# data-digest-stamp logs
+README guides step-by-step
+know nothing & learn much
+simple uniform-standardization
+encourage plain-understanding 
+prove for oneself 
+truth if anonymous
 # OVERVIEW ########################
-# usr inserts FreeBSD 10.3 installer usb
-# into an AMD64 computer
-# installs FreeBSD 10.3 GENERIC
-# sculpts kernel & world
-# populates usb with the new-host OTOPSK $KEY
-# usr trades $KEY amongst network for access to other hosts
-# CLAN nfs-unix-groups allow persistent data accross ANONI sessions
-# users ###########################
-# con    
-#    physical-host console user
-# norm
-#    ssh jail user
-#    normal jail access to system
-# heir
-#    ssh jail user
-#    only way to access host 
-# lord 
-#    host ssh capiscum super-user-group
-#    each lord has their responsible section of system
-#    wheel jail net zfs world log rep chron
-# root ############################
-# heir $KEY -> ssh ANONI heir 
-# ANONI heir -> RABBIT $KEY -> ssh host RABBIT -> su root 
+get a common AMD64-machine 
+remake machine via README into a unix node
+attach node to a peer-2-peer encrypted-network
+
+all connections encrypted via single-use-keys
+such keys:
+  - prevent replay attacks from man-in-the-middle
+  - man-in-the-middle can't know if a user is privledged or normal
+  - user account deleted after first-access to leave-no-trace
+  - traded amongst network users to share access to hosts 
+  - gain value relative to other nodes to be exchanged as currency
+
+services offered:
+  - bounce traffic to obfuscate user-physical-location
+  - send/receive messages
+  - send/receive files
+  - proxy wifi-device traffic to circumvent user-tracking
+# REQUIREMENT #####################
+AMD64-machine
+usb installer (freeBSD.10-3.AMD64.memstick.img)
+usb INIT (zfs formated usb with install-data)
+usb-to-be-wiped (optional process to create INIT usb)
+# LAYERS #########################
+    HARDWARE_LAYER   : 
+       mobo cpu mem drive psu montior keyboard
+       library of raw actions to AMD64 cpu
+    SOFTWARE_LAYER   : 
+       FreeBSD unix kernel 
+       mechanisation of actions to HARDWARE_LAYER
+       system-enviornment
+    INTERFACE_LAYER : 
+       c-libraries 
+       perl-libraries
+       permission-based access to SOFTWARE_LAYER
+       usr interactions with system-enviornment via shell
+    NETWORK_LAYER   : 
+       IPv4 ethernet & wifi end-points
+       direct-encrypted-tunnels amongst IPv4 connected-nodes
+       traffic-relay from node to various nodes to obfuscate traffic-origin
+           ex: {usr}->ANONI_A -> ANONI_D -> ANONI_J -> sleep 
+               ANONI_J -> ANONI_F -> ANONI_V -> sleep -> {action} 
+# USERS ###########################
+con    
+   physical-host console user
+   usb device end-point
+norm
+   ssh jail user
+   normal jail access to system
+heir
+   ssh jail user
+   only way to access host 
+lord 
+   can only access via ssh jail heir
+   host super-user-group
+   each lord responsible for a section of the system
+# ROOT ############################
+only one way to total-control root a computer
+   heir $KEY -> ssh ANONI heir 
+   ANONI heir -> RABBIT $KEY -> ssh host RABBIT -> su root 
 # TERMS ###########################
-# OTOPSK - one time only pre shared key 
-# RABBIT - alarm authenticated-wheel hole to host root
-# ANONI  - external-anonymous access shell interface
-# WORLD  - unix nfsv4 CLAN filesystem
-# CLAN   - unix network groups
-# NET    - network IPv4 lists
-# PF_NET - sub-net white-list
-# NODE   - individual machine on network
-# CENSUS - network file index
-# META   - index arrays 
+OTOPSK - one time only pre shared key
+RABBIT - alarm authenticated-wheel hole to host root
+ANONI  - external-anonymous access shell interface
+WORLD  - unix nfs CLAN user filesystem
+CLAN   - unix-groups allow persistent data accross ANONI sessions
+PF_NET - network IPv4 connection lists
+NODE   - individual machine on network
+CENSUS - network file indexes of location
+META   - meta-data index arrays 
+man-in-the-middle - entity intercepts traffic between two nodes
 # USB #############################
 BANK
-   NET 
    PF_NET
    CLAN 
    host/	
-      NODE/ 
-         usr/ p id_rsa.pub id_rsa 
+      $host/ 
+         $grp/    
+            $usr/ p id_rsa.pub id_rsa 
 KERN
    README
    bin/
@@ -116,94 +129,101 @@ LOG
    CENSUS 
       NODE/
 # BEGIN ###########################
-# keyboard F1-F12 are machine-unique 
-# one will drop you into BIOS quickly upon boot
-# power-one machine
-# wait to see if mobo will present F? key
-# or spam F? key
-# drop to BIOS
-# BIOS will reveal machine cpu
-# look for boot options
-# select usb device to boot
-# trial & error until the freeBSD demon displayed
-# curiousity & relentlessness rewards answer
+discover if computer supports AMD64
+keyboard F1-F12 are computer-unique hot-keys
+one hot-key will drop you into BIOS
+hot-key only works during first-few-moments of boot
+power-one machine
+wait to see if BIOS will display a banner
+banner will display mobo manufacturer & correct hot-key
+or just spam F-keys to find correct hot-key
+drop to BIOS
+BIOS will reveal machine cpu
+look for boot options
+select usb device to boot first
+curiousity & relentlessness rewards answer
+trial & error is the action of the hacker
+when configuration of BIOS is believed to be correct
+do not press hot-key & hope 
+correct if freeBSD demon is displayed after during boot
 # IMPORTANT #######################
-# -    raw command typed into interface
-#### - action 
-CAPS - item a variable learnt from prior step
+%    - command typed into terminal
+//// - comment on action to take
+>>>> - example command
+CAPS - item a variable learnt from prior-step
 # INSTALL PROCEEDURE ##############
 #### set bios boot from usb
-#### boot FreeBSD install memstick
+#### boot FreeBSD-install-memstick
 #### select Shell
-# camcontrol devlist
+% camcontrol devlist
 #### this cmd returns all storage-devices
 #### find storage-device & USB to over-write 
+#### HOST = hostname (user created name of computer)
 #### DRIVE = storage-device 
 #### USB   = usb-device
 #### INIT = name of INIT USB
 #### NAME = think
 #### INIT = name of INIT USB
 #### ALFADATE = alffabet name
-#### in doubt, unplug usb & run command again to find missing
-
-# dd if=/dev/zero of=/dev/DRIVE bs=1M
-
-#### wait a minute or let it finish
-#### to finish
-# ctrl-c
-
-#### be sure only node drive & INIT usb inserted
-
-# camcontrol devlist
-
+#### be sure only drive attached to computer (hdd/ssd)
+% camcontrol devlist
+//// find DRIVE name 
+//// ada0 usually the drive; da0 usually the usb
+% dd if=/dev/zero of=/dev/DRIVE bs=1M
+   >>>> if=/dev/zero of=/dev/ada1 bs=1M
+//// let it finish
+# OPTIONAL USB CREATE #############
 #### insert usb-to-be-wiped
 
-# camcontrol devlist
+% camcontrol devlist
 
 #### find new entry 
+#### in doubt, unplug usb & run command again to find new-entry 
 #### replace USB with device name
->>>> ex: ada0 da1
+//// ada# usually the drive; da1 usually the usb
 
-# dd if=/dev/zero of=/dev/USB bs=1M
-
->>>> if=/dev/zero of=/dev/da1 bs=1M
+% dd if=/dev/zero of=/dev/USB bs=1M
+   >>>> if=/dev/zero of=/dev/da1 bs=1M
 
 #### let it finish
+% zpool create NAME /dev/USB
+//// connect INIT (usb with install data)
+% zpool import INIT 
+% zfs snapshot INIT/KERN@ALFADATE
 
-# zfs snapshot INIT/KERN@ALFADATE
+% zfs send INIT/KERN@ALFADATE | zfs recv NAME/KERN
 
-# zpool create NAME /dev/USB
-# zfs send INIT/KERN@ALFADATE | zfs recv NAME/KERN
+% zfs create NAME/BANK
+% zfs create NAME/LOG
+% zfs create NAME/META
 
-# zfs create NAME/BANK
-# zfs create NAME/LOG
-# zfs create NAME/META
+% mkdir /NAME/LOG/misc
+% mkdir /NAME/BANK/HOST/
+% cp /INIT/BANK/pf_net /NAME/BANK/pf_net
 
-# mkdir /NAME/LOG/misc
-# mkdir /NAME/BANK/host/
-
-# zfs snapshot NAME/KERN@ALPHADATE
-# zpool export NAME
-# exit
-
+% zfs snapshot NAME/KERN@ALPHADATE
+% zpool export NAME
+# CONTINUE MANDATORY STEPS ########
+% exit
 #### select Install
 #### select Select
 
-#### hostname new-node-name
+#### hostname 
+% HOST
 
-#### tick via spacebar 
+#### tick options via spacebar 
 #### only have tick: doc src
 
 #### select Auto (ZFS)
 #### select Select (Install Proceed with Installation)
 #### select stripe
 
-#### tick DRIVE 
+#### tick DRIVE
 #### select YES
 
-#### root pass
-# root
-# root
+#### set root password as root
+% root
+% root
 
 #### select Cancel
 #### select NO
@@ -215,80 +235,94 @@ CAPS - item a variable learnt from prior step
 
 #### select NO
 #### select exit
-#### select NO
-#### select Reboot
-
-#### put away installer usb & INIT usb
+#### select YES
+% zpool import -f INIT
+% cp /INIT/KERN/conf/rc.conf /etc/
+% zpool export INIT
+//// unplug INIT usb
+% reboot 
 # --- REBOOT ---
 # GENERIC_WORLD ###################
-# zpool import -f usb
-# cd /usb/KERN/install/
-# /bin/sh /usb/KERN/install/1.INIT
-# perl /usb/KERN/install/2.PORT /usb
-# perl /usb/KERN/install/3.WORLD /usb node
-# vim /etc/rc.conf && vim /etc/pf.conf && vim /etc/jail.conf && vim /etc/pf_net
-# rm -r /usr/obj
-# cd /usr/src/
-# make -j2 buildkernel KERNCONF=KERN
-# make installkernel KERNCONF=KERN
-# rm -r /usr/obj
-# make -j2 buildworld
+% zpool import -f INIT
+% cd /INIT/KERN/install/
+% /bin/sh /INIT/KERN/install/1.INIT
+% perl /INIT/KERN/install/2.PORT /INIT
+% perl /INIT/KERN/install/3.WORLD /INIT node
+% ifconfig
+//// ifconfig will report network-interfaces
+//// INT = interface
+//// interface{ em0,re0,... }
+//// IP4 = #.#.#.#
+//// IP4 are four numbers seperated by '.'
+   >>>> inet 123.123.12.113
+% vim /etc/rc.conf
+//// set INT
+//// set IP4 
+% vim /etc/pf.conf
+//// set INT
+//// set IP4 
+% vim /etc/jail.conf 
+//// set INT
+% vim /etc/pf_net
+//// add a new entry on a new line
+//// type only IP4 no spaces
+% rm -r /usr/obj
+% cd /usr/src/
+% make -j2 buildkernel KERNCONF=KERN
+% make installkernel KERNCONF=KERN
+% rm -r /usr/obj
+% make -j2 buildworld
 # CUSTOM_WORLD ####################
-# make installworld
-# make installworld DESTDIR=/usr/ANONI
-# make distribution DESTDIR=/usr/ANONI
-# cp -R /usr/local/ /usr/ANONI/usr/local/
-# zpool export usb
+% make installworld
+% make installworld DESTDIR=/usr/ANONI
+% make distribution DESTDIR=/usr/ANONI
+% cp -R /usr/local/ /usr/ANONI/usr/local/
+% zpool export INIT
 # SHADOW_WORLD ####################
-# zpool import usb -o altroot=/usr/ANONI/mnt usb
-# jail -c anoni
-# jls
-# jexec 1 /bin/csh
-# perl usb/KERN/jinstall/1.WORLD /usb
-# perl usb/KERN/jinstall/2.ANONI /usb hostname
-# vim rc.conf
-# exit
-# zpool export usb
-# unplug usb
-# reboot
+% zpool import -o altroot=/usr/ANONI/mnt INIT
+% jail -c anoni
+% jls
+//// verify the jail is has the number 1
+% jexec 1 /bin/csh
+% perl /mnt/INIT/KERN/jinstall/1.WORLD /INIT
+% perl /mnt/INIT/KERN/jinstall/2.ANONI /INIT HOST 
+% vim rc.conf
+//// assign IP4 address
+% exit
+% zpool export INIT 
+//// unplug INIT
+% reboot
 # --- REBOOT ---
 # NORM_WORLD ######################
 ##### login as con
 ##### pass: con
-# hostname
-# uname -a
-# ifconfig
-# ls
-# cd
-# vim
-# less
-# TXN_$KEY
 # RABBIT_HOLE #####################
-#### plug in usb
-#### usr usb host clan
-# con@node /~$ echo 'con usb host wheel' > ~/ted
-# con@node /~$ cp ~/ted /usr/ANONI/HIVE/FEED/norm/ 
-#### wait for demon to wake up 10 min
-#### DEMON will mount usb and create a key directory in home ~/
-# cd
-# pwd
-# ls
+#### plug in INIT usb
+% con@node /~$ echo 'con INIT HOST wheel' > ~/ted
+% con@node /~$ cp ~/ted /usr/ANONI/HIVE/FEED/norm/ 
+#### wait for demon to wake up around 10 min
+#### DEMON will mount usb and create a key-dir in home ~/
+% con@node /~$ cd 
 #### $KEY = dir name of remote usr
-#### host is the ip4 of host
-# cp $KEY/id_rsa ~/.ssh/
-# chmod -R 700 ~/
-# c
-# cat $KEY/p
-# ssh $KEY@host
+#### IP4 is the ip4 of host
+% cp $KEY/id_rsa ~/.ssh/
+############### % chmod -R 700 ~/    DEMON todo
+% c
+% ifconfig
+% cat $KEY/p
+% ssh $KEY@IP4
+   >>>> ssh 632@1.0.1.2
 #### type contents of p with no spaces
-# ifconfig
-# su
+//// verify ssh via IP4 change
+% ifconfig
+% su
 #### pass = root
 ---- RABBIT ----
-# root@node /root$ perl usb/KERN/install/4.POSTJAIL
-# root@node /root$ perl usb/KERN/install/5.MAP
-# root@node /root$ echo 'your_initator_manifest' >> /etc/motd
-###################################
+% root@node /root$ perl usb/KERN/install/4.POSTJAIL
+% root@node /root$ perl usb/KERN/install/5.MAP
+% root@node /root$ echo 'your_initator_manifest' >> /etc/motd
+% reboot
+# --- REBOOT ---
 # MAP #############################
 /root/         warren
 /bin/
@@ -371,14 +405,14 @@ p2p tunnels
 reverse-shell
 firewall-hole
 # CHRON ###########################
-# 10day - overwrite accessed users
-# 	- 10 jails rotated per day
-# 	- 100k $KEY in 10 day
-# 	- $KEY buyback
-# day   - uninterrupted service
-#       - specific-access only
-#       - $KEY for certain day
-# work  - hours shell alive
+10day - overwrite accessed users
+      - 10 jails rotated per day
+      - 100k $KEY in 10 day
+      - $KEY buyback
+day   - uninterrupted service
+      - specific-access only
+      - $KEY for certain day
+work  - hours shell alive
 # PATIENCE ########################
 DEMON need much sleep
 actions take time
@@ -388,20 +422,22 @@ multi-terminal emphasis
 pass       : root
 pass       : con
 OTOPSK     : scp norm
+		BANK-XFR
 OTOPSK & printed-pass : lord heir
+		USB-XFR
 # HIVE ############################
 TED  - console $KEY shift
 CAM  - archivist 
 IRO  - get
 WUF  - wakeup
-ALEX - krip
+XEN - krip
 
     - file digest
     - proxy
     - tar
     - nmap
-KIKE    - p2p $KEY tunnels 
-JAIL    - chron jail rotate
-TEST    - usr trials
-MAID    - host cleanup
+SAM    - p2p $KEY tunnels 
+BOB    - chron jail rotate
+TST    - usr trials
+VEN    - host cleanup
 
