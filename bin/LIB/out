@@ -1,0 +1,14 @@
+sub out
+{
+	my ($usr, $msg) = @_;
+
+	my @who = `who | awk '{print \$1" "\$2}'`;
+	chomp @who;
+	
+	for (@who)
+	{
+		my @cmd = split(" ", $_);
+		next unless ($cmd[0] eq $usr);
+		`echo $msg > /dev/$cmd[1]`;
+	}
+}

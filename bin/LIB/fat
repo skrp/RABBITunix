@@ -1,0 +1,16 @@
+sub fat
+{
+	my ($dev, $usr, $udir) = @_;
+	$udir =~ s%/\z%%;
+
+	my $er = 'FAIL $dev invalid';
+	out($usr, $er) unless (-e /dev/$dev);
+	`mount -t msdosfs /dev/$dev $udir`;
+	opendir(my $tdh, $udir) or return 1;
+	close $tdh;
+
+	`chmod -R 700 $udir`;
+	`chown -R $usr $udir`;
+	
+	return 0;
+}

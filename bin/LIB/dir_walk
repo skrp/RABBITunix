@@ -1,0 +1,29 @@
+# create global array @FILE ;
+# dir_walk($DIR, \&print_file);
+sub dir_walk
+{ 
+	my ($DIR, $code) = @_;
+	my $dir;
+	$DIR =~ s%/\z%%;
+
+	$code->($DIR);
+
+	if (-d $DIR)
+	{
+		my $file;
+		unless(opendir $dir, $DIR)
+		{
+			warn "FAIL open dir $DIR: $!\n";
+			return;
+		}
+		while ($file = readdir $dir)
+		{
+			next if $file eq '.' || $file eq '..';
+			dir_walk("$DIR/$file", $code);
+		}
+	}
+}
+sub print_file
+{
+	push @FILE, $_[0] if -f $_[0];
+}

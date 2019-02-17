@@ -1,0 +1,5 @@
+sub r
+{
+	my %response
+	print "$value:  $key\n" while (my ($key, $value) = each %response);
+}

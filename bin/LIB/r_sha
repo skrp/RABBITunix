@@ -1,0 +1,13 @@
+sub r_sha
+{
+	my ($target) = @_;
+	my @sha;
+
+	my $rule = File::Find::Rule->file()->start($target);
+	while(defined(my $file = $rule->match)) 
+	{
+    		my ($sha) = digest($file) or return 1;
+		push @sha $sha;
+	}
+	return @sha;
+}

@@ -1,0 +1,8 @@
+sub ping
+{
+	my ($Pfh, $curTIME);
+	open($Pfh, '>>', $PING);
+	$curTIME = TIME();
+	print $Pfh "$curTIME $$\n";
+	close $Pfh;
+}

@@ -1,0 +1,7 @@
+sub age
+{
+	my $age = localtime();
+	$age =~ s%..........20..%%;
+	$age =~ s%^....%%;
+	$age =~ s% %_%;
+}

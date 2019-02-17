@@ -1,0 +1,17 @@
+sub uniq
+{
+	my ($ref1, $ref2) = @_;
+	my %master;
+	my (@set, @one, @two);
+	@one = @{$ref1};
+	@two = @{$ref2};
+
+	%master = map{$_ => undef} @one;
+
+	for (@two)
+	{
+		next if (exists $master{$_});
+		push(@set,$_);
+	}
+	return @set;
+}

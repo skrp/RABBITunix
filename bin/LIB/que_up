@@ -1,0 +1,9 @@
+sub que_up
+{
+	my $qfh; my @QUE;	
+	que_get();
+	open($qfh, '<', $TODO);
+	@QUE = readline $qfh; 
+	chomp @QUE; close $qfh;
+	return (@QUE);
+}

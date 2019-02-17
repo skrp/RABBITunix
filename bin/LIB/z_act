@@ -1,0 +1,14 @@
+sub z_act
+{
+	my (@pool, @active);
+	@pool = `zfs list`;
+	chomp @pool;
+###############################
+	for (@pool)
+	{
+		push (@active, $_) if (/pool/);
+	}
+###############################
+	chomp @active;
+	return @active;
+}

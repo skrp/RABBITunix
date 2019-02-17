@@ -1,0 +1,7 @@
+sub f_own 
+{
+	my ($file) = @_;
+	my $owner = `ls -l $file |  awk '{print \$3}'`;
+	chomp $owner;
+	return $owner;
+}

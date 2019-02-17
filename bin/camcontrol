@@ -1,0 +1,147 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+my ($iusr, $ifile) = @ARGV;
+camcontrol($iusr, $ifile);
+sub camcontrol
+{
+	my ($usr, $file) = @_;
+	my (@rootcam, @usrcam, @set, @cmd);
+	my ($msg1, $msg2, $udir);
+
+	my %fs = ( zfs => \&zfs, fat => \&fat );
+	my $usr = f_own($file);
+
+	$msg1 = 'disconnect device 5min';
+	$msg2 = 'available dev';
+	$udir = "/usr/home/$usr/usb/";
+
+	sleep 1;
+	out($usr, $msg1);
+
+	@rootcam = `camcontrol devlist`;
+	chomp @rootcam;
+	$_ =~ s%.*\(%% for @rootcam;
+	$_ =~ s%,.*%% for @rootcam;
+
+	out($file, 'now');
+	sleep 3;
+	
+	@usrcam = `camcontrol devlist`;
+	chomp @usrcam;
+	$_ =~ s%.*\(%% for @usrcam;
+	$_ =~ s%,.*%% for @usrcam;
+
+	@set = uniq(\@rootcam, \@usrcam);
+
+	$msg2 .= " dev=$_" for @set;
+	
+	my @imp = `zpool import`;
+	chomp @imp;
+	$imp[0] =~ s%.*pool: %%;
+	$msg2 .= " zfs=$imp[0]";
+
+	out($usr, $msg2);
+
+	sleep 3;
+	my @c = slurp($file);
+	chomp @c;
+	my @cmds = split(" ", $c[0]);
+	#print "c $cmds[0] u $usr\n";
+	$fs{$cmds[0]}->($cmds[1], $usr, $udir);
+}
+sub out
+{
+	my ($usr, $msg) = @_;
+
+	my @who = `who | awk '{print \$1" "\$2}'`;
+	chomp @who;
+	
+	for (@who)
+	{
+		my @cmd = split(" ", $_);
+		next unless ($cmd[0] eq $usr);
+		`echo $msg > /dev/$cmd[1]`;
+	}
+}
+sub f_own 
+{
+	my ($file) = @_;
+	my $owner = `ls -l $file |  awk '{print \$3}'`;
+	chomp $owner;
+	return $owner;
+}
+sub uniq
+{
+	my ($ref1, $ref2) = @_;
+	my %master;
+	my (@set, @one, @two);
+	@one = @{$ref1};
+	@two = @{$ref2};
+
+	%master = map{$_ => undef} @one;
+
+	for (@two)
+	{
+		next if (exists $master{$_});
+		push(@set,$_);
+	}
+	return @set;
+}
+sub slurp 
+{
+	my $file = shift;
+
+	open(my $subfh, '<', $file);
+	my @slurp = readline $subfh;
+	close $subfh; chomp @slurp;
+
+	return @slurp;
+}
+sub zfs
+{
+	my ($pool, $usr, $udir) = @_;
+	my %zup;
+	my @zarr;
+	$udir =~ s%/\z%%;
+
+	`zpool import -f -o altroot=$udir $pool`;
+	@zarr = z_act();
+	for (@zarr)
+	{
+		last if ($_ eq $pool); 
+	}
+	`chmod -R 700 $udir`;
+
+	`chown -R $usr $udir`;
+	return 0;
+}
+sub fat
+{
+	my ($dev, $usr, $udir) = @_;
+	$udir =~ s%/\z%%;
+
+	my $er = 'FAIL $dev invalid';
+	out($usr, $er) unless (-e /dev/$dev);
+	`mount -t msdosfs /dev/$dev $udir`;
+	opendir(my $tdh, $udir) or return 1;
+	close $tdh;
+
+	`chmod -R 700 $udir`;
+	`chown -R $usr $udir`;
+	
+	return 0;
+}
+sub z_act
+{
+	my (@pool, @active);
+	@pool = `zfs list`;
+	chomp @pool;
+###############################
+	for (@pool)
+	{
+		push (@active, $_) if (/pool/);
+	}
+###############################
+	chomp @active;
+	return @active;
+}

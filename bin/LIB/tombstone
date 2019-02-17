@@ -1,0 +1,9 @@
+sub tombstone
+{
+	my ($cnt, $ttl) = @_;
+	my ($tTIME, $nTIME, $life);
+	$tTIME = age();
+	$nTIME = TIME();
+	$life = "$BIRTH $tTIME";
+	print $Lfh "$nTIME demon: $NAME age: $life yay: $YAY fail: $FAIL\n";
+}
