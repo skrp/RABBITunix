@@ -25,6 +25,8 @@ chomp @bin;
 ###########################
 print"\nFILES U MUST NOW EDIT: rc.conf\n";
 ###########################
+`rm -rf /boot/`;
+###########################
 `pw userdel toor`;
 ###########################
 open(my $jfh, '<', '/etc/purgejail');	

@@ -47,7 +47,7 @@ while (1)
 # SLEEP ######################
 	if (-e $SLEEP)
 	{
-			my @QUE; $QUE[0]='ted';
+			my @QUE; $QUE[0]='wuf';
 			tombstone($YAY, $FAIL);
 			SLEEP($YAY, $FAIL, @QUE);
 	}
@@ -150,5 +150,5 @@ sub act
 		{ $FAIL++; return; }
 	
 	my $ipid = `ps -a | grep TED | head -n 1 | sed s'/ .*//'`;
-	kill('INT', $ipid);
+	kill('INT', $ipid) && $YAY++;
 }

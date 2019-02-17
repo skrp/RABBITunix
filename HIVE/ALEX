@@ -2,6 +2,7 @@
 use strict; use warnings;
 use POSIX;
 use Digest::SHA;
+use File::Copy;
 ##############################
 # ALEX - $KEY miner
 ##############################
@@ -41,8 +42,6 @@ die "FAIL write PING $!\n" unless (-w $PING);
 # PREP #######################
 my @blk;
 my $OP = 0;
-kup();
-krip();
 $SIG{INT} = \&sig;
 # LIVE #######################
 while (1)
@@ -152,26 +151,26 @@ sub act
 ############################
 	return if ($OP == 1);
 	$OP = 1;
-	krip();
 	my $tmp = '/KRIP/id_rsa';
 	my $ptmp = '/KRIP/id_rsa.pub';
 ############################
 	`ssh-keygen -q -N "" -t rsa -b 2048 -f $tmp`;
-	sleep 60;
 	my $nsha = file_digest($tmp);
 	my $sdir = '/KRIP/norm/'.$nsha;
 	mkdir $sdir;
-	move("$sdir/", $tmp);
-	move("$sdir/", $ptmp);
+	move($tmp, "$sdir/");
+	move($ptmp, "$sdir/");
 	$YAY++;
 ############################
+	my $irs = `jot -r 1 150 360`;
+	sleep $irs;
 	my @pass = neopass();
 	`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $tmp`;
-	sleep 60;
 	my $lsha = file_digest($tmp);
 	my $ssdir = '/KRIP/lord/'.$lsha;
-	move("$ssdir/", $tmp);
-	move("$ssdir/", $ptmp);
+	mkdir $ssdir;
+	move($tmp, "$ssdir/");
+	move($ptmp, "$ssdir/");
 	`echo "$pass[1]" > $ssdir/p`;
 	$YAY++;
 	$OP = 0;
@@ -206,21 +205,6 @@ sub file_digest
   my $digester = Digest::SHA->new('sha256');
   $digester->addfile( $file, 'b' );
   return $digester->hexdigest;
-}
-sub krip
-{
-	my $blk = shift @blk;
-	my $fb = "/KRIP/filt/$blk";
-# send tb thru bit-filter
-	`dd if=$fb of=/dev/random`;
-	unlink $fb;
-}
-sub kup
-{
-	opendir(my $idh, '/KRIP/filt/');
-	@blk = readdir $idh;
-	close $idh; chomp @blk;
-	shift @blk; shift @blk;
 }
 sub sig
 {

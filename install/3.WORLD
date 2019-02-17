@@ -23,16 +23,13 @@ mkdir '/CLAN/src/';
 mkdir '/CLAN/log/';
 mkdir '/KRIP/norm/';
 mkdir '/KRIP/lord/';
-mkdir '/KRIP/filt/';
-mkdir '/KRIP/sea/';
 chmod(550,'/CLAN');
+chmod(550,'/KRIP');
 chmod(770,'/CLAN/pool/');
 chmod(770,'/CLAN/src/');
 chmod(770,'/CLAN/log/');
 chmod(770,'/KRIP/norm/');
 chmod(770,'/KRIP/lord/');
-chmod(770,'/KRIP/filt/');
-chmod(730,'/KRIP/sea/');
 ###########################
 `zfs create zroot/usr/ANONI`;
 `zfs create zroot/usr/ANONI/home`;
@@ -92,6 +89,8 @@ close $hfh; chomp @lines;
 chdir("/");
 `rm -rf $_` for (@lines);
 ###########################
+`rm -rf /usr/lib32/`;
+###########################
 my $shell = '/bin/csh';
 my $home = "/usr/home/con/";
 my $cs = "/usr/home/con/.ssh/";
@@ -106,7 +105,7 @@ copy("$usb/KERN/conf/.cshrc","$home");
 # rabbit -> con_host -> ANONI_jail -> heir_jail -> rabbit_host -> root 
 ############################
 my @grp = cr_grp();
-my $limit = 20000;
+my $limit = 1000;
 my @list = 1..$limit;
 mkdir("/root/grp");
 ############################
