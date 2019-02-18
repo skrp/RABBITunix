@@ -314,3 +314,13 @@ sub uagent
     timeout => 45);
   return $s_ua;
 }
+sub rep
+{
+	my ($date, $clan, $name) = @_;
+
+	open($rfh, '>>', "/REP/pool/$clan");
+	print $rfh "$name\n";
+	close $rfh;
+
+	return 0;
+}

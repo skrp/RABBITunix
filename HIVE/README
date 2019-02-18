@@ -2,14 +2,15 @@ TED  - console $KEY shifter
 CAM  - archivist 
 IRO  - get
 WUF  - wakeup
-ALEX - krip
+ALEX - krip farmer
+FRED - log quest_giver
 
     - file digest
     - proxy
     - tar
     - nmap
-KIKE    - p2p $KEY tunnels 
-JAIL    - chron jail rotate
+
+BANK    - scp $KEY tunnels 
 TEST    - usr trials
 MAID    - host cleanup
 

@@ -213,3 +213,13 @@ sub sig
 	else
 		{ act(); }
 }
+sub rep
+{
+	my ($date, $clan, $name) = @_;
+
+	open(my $rfh, '>>', "/REP/$clan");
+	print $rfh "$name\n";
+	close $rfh;
+
+	return 0;
+}

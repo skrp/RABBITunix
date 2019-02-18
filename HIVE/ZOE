@@ -10,7 +10,7 @@ die "FAIL STILLBORN $!\n" unless (daemon() == 0);
 # GLOBAL #####################
 my $NAME = name();
 # /HIVE/
-my $ROOT = '/usr/ANONI/HIVE/'
+my $ROOT = '/usr/ANONI/HIVE/';
 my $PING = $ROOT.'PING';
 my $BIO = $ROOT.'BIO/'.$NAME;
 my $BIOYAY = $ROOT.'BIO/'.$NAME.'_YAY';
@@ -40,20 +40,17 @@ die "FAIL write pool $!\n" unless (-w $POOL);
 die "FAIL write g $!\n" unless (-w $G);
 die "FAIL write BIO $!\n" unless (-w $BIO);
 die "FAIL write PING $!\n" unless (-w $PING);
-die "FAIL write TODO $!\n" unless (-w $TODO);
 die "FAIL write FEED $!\n" unless (-w $FEED);
-die "FAIL write PING $!\n" unless (-w $PING);
 # LIVE #######################
+my $cnt = 0;
 while (1)
 {
-# SLEEP ######################
-	my ($cnt, $ttl);
-# WORK #######################
-	$cnt = 0;
-	SLEEP($cnt, $ttl, @QUE) if (-e $SLEEP);
+	sleep 600;
+	SLEEP($cnt, $cnt, $cnt) if (-e $SLEEP);
+	next unless (-f $zoe);
 	act();
 	if ($cnt % $RATE == 0)
-	   { tombstone($cnt, $ttl) }
+	   { tombstone($cnt, $cnt) }
 	$cnt++;
 }
 # CORE #######################
@@ -167,15 +164,8 @@ sub que_flush
 sub act
 {
 	next unless (-f $zoe);
-		
-
-	open(my $zfh, '<', $zoe);
-	my @line = readline $zfh;
-	close $zfh; chomp @line;
-
-
-	my ($type) = $line[0];
-	\&type;
+	my $iusr = f_own($zoe);
+	camcontrol($iusr, $zoe);
 }
 sub camcontrol
 {
@@ -184,22 +174,21 @@ sub camcontrol
 	my ($msg1, $msg2, $udir);
 
 	my %fs = ( zfs => \&zfs, fat => \&fat );
-	my $usr = f_own($file);
 
 	$msg1 = 'disconnect device 5min';
 	$msg2 = 'available dev';
 	$udir = "/usr/home/$usr/usb/";
 
-	sleep 1;
 	out($usr, $msg1);
+	sleep 5;
 
 	@rootcam = `camcontrol devlist`;
 	chomp @rootcam;
 	$_ =~ s%.*\(%% for @rootcam;
 	$_ =~ s%,.*%% for @rootcam;
 
-	out($file, 'now');
-	sleep 3;
+	out($usr, 'insert now');
+	sleep 30;
 	
 	@usrcam = `camcontrol devlist`;
 	chomp @usrcam;
@@ -212,16 +201,23 @@ sub camcontrol
 	
 	my @imp = `zpool import`;
 	chomp @imp;
-	$imp[0] =~ s%.*pool: %%;
-	$msg2 .= " zfs=$imp[0]";
-
+	if (defined $imp[0])
+	{
+		$imp[0] =~ s%.*pool: %%;
+		$msg2 .= " zfs=$imp[0]";
+	}
 	out($usr, $msg2);
 
-	sleep 3;
+	sleep 5;
 	my @c = slurp($file);
 	chomp @c;
 	my @cmds = split(" ", $c[0]);
 	$fs{$cmds[0]}->($cmds[1], $usr, $udir);
+
+	out($usr, 'usb mounted');
+	$YAY++;
+
+	unlink $zoe;
 }
 sub out
 {
@@ -295,7 +291,7 @@ sub fat
 	$udir =~ s%/\z%%;
 
 	my $er = 'FAIL $dev invalid';
-	out($usr, $er) unless (-e /dev/$dev);
+	out($usr, $er) unless (-e "/dev/$dev");
 	`mount -t msdosfs /dev/$dev $udir`;
 	opendir(my $tdh, $udir) or return 1;
 	close $tdh;
@@ -318,4 +314,14 @@ sub z_act
 
 	chomp @active;
 	return @active;
+}
+sub rep
+{
+	my ($date, $clan, $name) = @_;
+
+	open(my $rfh, '>>', "/REP/$clan");
+	print $rfh "$name\n";
+	close $rfh;
+
+	return 0;
 }

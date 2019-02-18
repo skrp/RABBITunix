@@ -7,4 +7,5 @@ load_rc_config $name
 #run_rc_command "$1"
 perl /usr/ANONI/HIVE/BIO/TED
 perl /usr/ANONI/HIVE/BIO/ALEX
+perl /usr/ANONI/HIVE/BIO/ZOE
 perl /usr/ANONI/HIVE/BIO/WUF

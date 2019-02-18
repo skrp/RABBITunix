@@ -45,6 +45,7 @@ die "FAIL write PING $!\n" unless (-w $PING);
 # LIVE #######################
 while (1)
 {
+	sleep 600;
 	sleep 1200 if (act() == 1);
 # SLEEP ######################
 	if (-e $SLEEP)
@@ -184,5 +185,15 @@ sub act
 	sleep 300;
 	$OP = 0;
 	$YAY++;
+	return 0;
+}
+sub rep
+{
+	my ($date, $clan, $name) = @_;
+
+	open(my $rfh, '>>', "/REP/$clan");
+	print $rfh "$name\n";
+	close $rfh;
+
 	return 0;
 }

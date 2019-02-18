@@ -1,0 +1,24 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+my ($file) =@ARGV;
+ichop($file);
+sub ichop
+{
+	my @set = slurp($file);
+	chop @set;
+	open(my $ifh, '>>', '/tmp/p');
+	print $ifh "$_\n" for @set;
+	close $ifh;
+}
+sub slurp 
+{
+	my ($file) = @_;
+	my $subfh; 
+	my @slurp;
+
+	open($subfh, '<', $file) or die "FAIL slurp $file : $!\n";
+	@slurp = readline $subfh;
+	close $subfh; chomp @slurp;
+
+	return @slurp;
+}

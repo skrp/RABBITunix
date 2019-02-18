@@ -1,9 +1,12 @@
 #!/usr/local/bin/perl
 use strict; use warnings;
 use POSIX;
+use Digest::SHA;
+use File::LibMagic;
 ##############################
 # GLUT - file scraper DEMON 
 ##############################
+my $cam = '/usr/ANONI/HIVE/FEED/norm/cam';
 # BIRTH ######################
 die "FAIL STILLBORN $!\n" unless (daemon() == 0);
 # GLOBAL #####################
@@ -21,7 +24,7 @@ my $G = '/usr/ANONI/dump/g/';
 # attributes
 my $BIRTH = age();
 my $SLEEP = $TODO.'_SLEEP';
-my $RATE = 100;
+my $RATE = 2;
 my $YAY = 0;
 my $FAIL = 0;
 # LOG ########################
@@ -39,32 +42,12 @@ die "FAIL write pool $!\n" unless (-w $POOL);
 die "FAIL write g $!\n" unless (-w $G);
 die "FAIL write BIO $!\n" unless (-w $BIO);
 die "FAIL write PING $!\n" unless (-w $PING);
-die "FAIL write TODO $!\n" unless (-w $TODO);
 die "FAIL write FEED $!\n" unless (-w $FEED);
-die "FAIL write PING $!\n" unless (-w $PING);
 # LIVE #######################
 while (1)
 {
-	my ($cnt, $ttl);
-	my @QUE = que_up();
-# SLEEP ######################
-	do { print $Lfh "bored\n"; sleep 3600; next} if (!@QUE);
-# WORK #######################
-	$cnt = 0;
-	$ttl = @QUE;
-	print $Lfh "ttl $ttl\n";
-	for (@QUE)
-	{
-		SLEEP($cnt, $ttl, @QUE) if (-e $SLEEP);
-		act($_);
-		if ($cnt % $RATE == 0)
-		{
-			tombstone($cnt, $ttl);
-			que_flush(@QUE);
-		}
-		$cnt++;
-	}
-	unlink $TODO;
+	SLEEP($cnt, $ttl, @QUE) if (-e $SLEEP);
+	act($_);
 }
 # CORE #######################
 sub name
@@ -176,42 +159,31 @@ sub que_flush
 }
 sub act
 {
-	my $target = shift;
-	my ($usr);
-	my (@file, @dir);
-	chdir $target;
-	op($target);	
+	next unless (-f $cam);
+	my (@FILE, @SHA);
 
-	op($_) for (@dir);
-	xs($f, $d) for (@file);	
-	rep($usr) for (@file);
-}
-sub op
-{
-	my $loc = shift;
-	open(my $dh, $target);
-	my @i = readdir $dh;
-	close $dh; chomp @i;
-	for @i
+	my @cmd = slurp($cam);
+	my $target = $cmd[0];
+	my $clan = $cmd[1];
+
+	dir_walk($target, \&fill);
+	for (@FILE)
 	{
-		if (-f $_)
-		 { push(@file, $i); }
-		elsif (-d $_)
-		 { push(@dir, $i); }
-		else
-		 { next; }
+
+		push(@SHA,xs($_,$POOL);
+
 	}
-}
-sub rep
-{
-	my ($sha, $usr);
-	`echo $sha >> $usr_rep`;
+	my $t = TIME();
+	rep($t,$clan,$_) for (@SHA);
+	my $ttl = @SHA;
+
+	tombstone('CAM', $ttl);
 }
 # XTRACTION & STANDARDIZE 
 sub XS
 {
-  my ($file, $url_path) = @_;
-  my $sha = file_digest($file); 
+  my ($file, $POOL, $G) = @_;
+  my $sha = f_digest($file); 
   print $Lfh "FAIL sha $file $!" if (!defined $sha);
 
   my $meta = $G.'g'.$sha;
@@ -222,15 +194,17 @@ sub XS
   }
   open(my $mfh, '>>', $meta);
   my $iname = xsname($file); 
-  my $ipath = xspath($url_path);
+  my $ipath = xspath($file);
   my $isize = xssize($file);
   my $imime; 
   print $Lfh "FAIL mime_enc $file $sha\n" unless eval { $imime = file_mime_encoding($file) };
   print $mfh "$iname\n$ipath\n$isize\n$imime\n";
   close $mfh;
-  move($file, $POOL.$sha);
+
+  `cp $file, $POOL.$sha`;
+  return $sha;
 }
-sub file_digest
+sub f_digest
 {
   my ($file) = @_;
   my $digester = Digest::SHA->new('sha256');
@@ -268,11 +242,40 @@ sub xssize
   my $size = -s $file;
   return $size;
 }
-sub uagent
+sub dir_walk
+{ 
+	my ($DIR, $code) = @_;
+	my $dir;
+	$DIR =~ s%/\z%%;
+
+	$code->($DIR);
+
+	if (-d $DIR)
+	{
+		my $file;
+		unless(opendir $dir, $DIR)
+		{
+			warn "FAIL open dir $DIR: $!\n";
+			return;
+		}
+		while ($file = readdir $dir)
+		{
+			next if $file eq '.' || $file eq '..';
+			dir_walk("$DIR/$file", $code);
+		}
+	}
+}
+sub fill 
 {
-  my $s_ua = LWP::UserAgent->new(
-    agent => "Mozilla/50.0.2",
-    from => 'punxnotdead',
-    timeout => 45);
-  return $s_ua;
+	push @FILE, $_[0] if -f $_[0];
+}
+sub rep
+{
+	my ($date, $clan, $tag) = @_;
+
+	open(my $rfh, '>>', "/REP/pool/$clan");
+	print $rfh "$tag\n";
+	close $rfh;
+
+	return 0;
 }

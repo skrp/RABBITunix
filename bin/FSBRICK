@@ -1,0 +1,55 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+#########################
+# BRICK - 
+#########################
+
+process('zroot');
+sub process 
+{
+	my ($pool) = @_;
+
+	#my @MAP = `ls /usr/ANONI/WORLD/`;
+	my @MAP = 0..100;
+	my $MAXbrick = @MAP;
+
+	my $mass = `df | grep $pool | awk '{print \$4}' | head -n 1`;
+	chomp $mass;
+	$mass -= 1000000;
+
+	my $quota = $mass/$MAXbrick;
+
+	print "mass: $mass\n";
+	print "quota:$quota\n";
+
+	for (@MAP)
+	{
+		my $imap = $_;
+		my $iquota = $quota;
+		$iquota -= 1000;
+		while ($iquota > 0)
+		{	
+			my $new_file = "$PATH.$imap";
+			my $f_file = f_up();
+
+			copy($f_file, $new_file);
+			my $f_size = `du $new_file`;
+			chomp $f_size;
+
+			$iquota -= $f_size;
+		}
+		
+	}
+	return 0;
+}
+
+
+
+#########################
+#########################
+#########################
+#########################
+#########################
+#########################
+#########################
+#########################
