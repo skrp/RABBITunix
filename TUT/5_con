@@ -1,0 +1,42 @@
+# TERMS ###########################
+//// USB - usb with BANK keys
+//// $KEY - name of remote usr
+//// IP4 - ip4 of host
+# SSH  ############################
+# NORM_WORLD ######################
+//// login user con 
+//// password is con
+# RABBIT_HOLE #####################
+//// plug in USB
+
+% con@node /~$ cd 
+% con@node /~$ echo 'con USB HOST wheel 1' > ~/ted
+
+% con@node /~$ cp ~/ted /usr/ANONI/HIVE/FEED/norm/ 
+//// wait for long while
+//// DEMON will mount usb & move a  
+
+% cp $KEY/id_rsa ~/.ssh/
+
+% cat $KEY/p
+   >>>> 5+ze- f.2.0 fc1q+ z/cz3
+//// ignore spaces in $KEY/p 
+
+% ssh $KEY@IP4
+
+   >>>> ssh 632@1.0.1.2
+   >>>> yes
+   >>>> enter passphrase 
+   >>>> 5+ze-f.2.0fc1q+z/cz3
+#### type contents of p with no spaces
+//// verify ssh via IP4 change in ifconfig
+% ifconfig
+% su
+#### pass = root
+---- RABBIT ----
+//// 
+% root@node /root$ perl USB/KERN/install/4.POSTJAIL
+% root@node /root$ perl USB/KERN/install/5.MAP
+% root@node /root$ echo 'your_initator_manifest' >> /etc/motd
+% reboot
+# --- REBOOT ---

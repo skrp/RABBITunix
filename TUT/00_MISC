@@ -1,0 +1,95 @@
+# MAP #############################
+/root/         warren
+/bin/
+/sbin/
+/etc/
+/tmp/
+/CLAN/         clan REP
+/KRIP/         pools of unassigned $KEY
+/KRIP/norm     mined $KEY named after sha256
+/KRIP/lord     mined $KEY named after sha256
+/KRIP/pass     pass named after sha256
+/usr/home/     lord home dir
+/usr/pool/      scp
+/usr/ANONI/
+/usr/ANONI/HIVE/
+/usr/ANONI/nfs/     
+/usr/ANONI/LIST/      file lists
+/usr/ANONI/src/       system source
+# REP #############################
+/CLAN/pool/ - host file pool 
+/CLAN/src/  - host system src 
+/CLAN/log/  - host log 
+append-only clan files 
+line { sha256 timestamp location clan }
+
+usr enhances code
+places it for upload
+all sys REP++ CLAN
+owner file in src
+
+usr tips ED to scrape
+digest of all files
+concatenate CLAN repfile
+if unique $KEY rewarded
+
+clan notary: log, file-index, TXN-witness
+retrace simple if subsequent review flag-bad 
+
+network verify & index
+relative $KEY dividend
+REP++ CLAN monthly
+CLAN TXN REP for zfs quota increase
+CLAN TXN REP new clan
+$KEY distributed in clan chests
+	usr -> con -> ssh node -> clan -> chest -> BANK_ID
+	BANK -> $KEY -> tunnels -> BANK_ID -> usb
+# LINK ############################
+new_node KIKE {clan} -> node_x KIKE
+node_x -> add_clan add_xclan -> $KEY deposit
+# PVP #############################
+pvp - process vs process
+	kill9 nukes, nice-hits, node-black-list
+# SSH #############################
+shell
+scp time-limited resume
+p2p tunnels
+reverse-shell
+firewall-hole
+# CHRON ###########################
+10day - overwrite accessed users
+      - 10 jails rotated per day
+      - 100k $KEY in 10 day
+      - $KEY buyback
+day   - uninterrupted service
+      - specific-access only
+      - $KEY for certain day
+work  - hours shell alive
+# PATIENCE ########################
+DEMON need much sleep
+actions take time
+harvest emphasis 
+multi-terminal emphasis
+# AUTHENTICATION  #################
+pass       : root
+pass       : con
+OTOPSK     : scp norm
+		BANK-XFR
+OTOPSK & printed-pass : lord heir
+		USB-XFR
+# HIVE ############################
+TED  - console $KEY shift
+CAM  - archivist 
+IRO  - get
+WUF  - wakeup
+XEN - krip
+
+    - file digest
+    - proxy
+    - tar
+    - nmap
+SAM    - p2p $KEY tunnels 
+BOB    - chron jail rotate
+TST    - usr trials
+VEN    - host cleanup
+

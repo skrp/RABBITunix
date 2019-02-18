@@ -1,0 +1,139 @@
+###################################
+# MKRX   - network unix clones
+#                              to0j
+###################################
+# INTRO ###########################
+journey to the land of unix
+experience C & shell & perl 
+
+ways of deep-sea secrets  
+raw-power of binary logic
+
+this ordeal 
+reward 1337
+
+hard for all
+way to wizard
+
+are you
+ready to go?
+###################################
+README guides step-by-step
+know nothing & learn much
+simple uniform-standardization
+encourage plain-understanding 
+prove for oneself 
+truth if anonymous
+# OVERVIEW ########################
+get a common AMD64-machine 
+remake machine via README into a unix node
+attach node to a peer-2-peer encrypted-network
+###################################
+all connections encrypted via single-use-keys
+such keys:
+  - prevent replay attacks from man-in-the-middle
+  - man-in-the-middle can't know if a user is privledged or normal
+  - user account deleted after first-access to leave-no-trace
+  - traded amongst network users to share access to hosts 
+  - gain value relative to other nodes to be exchanged as currency
+
+services offered:
+  - bounce traffic to obfuscate user-physical-location
+  - send/receive messages
+  - send/receive files
+  - proxy wifi-device traffic to circumvent user-tracking
+# REQUIREMENT #####################
+AMD64-machine
+usb installer (freeBSD.10-3.AMD64.memstick.img)
+usb INIT (zfs formated usb with install-data)
+usb-to-be-wiped (optional process to create INIT usb)
+# LAYERS #########################
+    HARDWARE_LAYER   : 
+       mobo cpu mem drive psu montior keyboard
+       library of raw actions to AMD64 cpu
+    SOFTWARE_LAYER   : 
+       FreeBSD unix kernel 
+       mechanisation of actions to HARDWARE_LAYER
+       system-enviornment
+    INTERFACE_LAYER : 
+       c-libraries 
+       perl-libraries
+       permission-based access to SOFTWARE_LAYER
+       usr interactions with system-enviornment via shell
+    NETWORK_LAYER   : 
+       IPv4 ethernet & wifi end-points
+       direct-encrypted-tunnels amongst IPv4 connected-nodes
+       traffic-relay from node to various nodes to obfuscate traffic-origin
+           ex: {usr}->ANONI_A -> ANONI_D -> ANONI_J -> sleep 
+               ANONI_J -> ANONI_F -> ANONI_V -> sleep -> {action} 
+# USERS ###########################
+con    
+   physical-host console user
+   usb device end-point
+norm
+   ssh jail user
+   normal jail access to system
+heir
+   ssh jail user
+   only way to access host 
+lord 
+   can only access via ssh jail heir
+   host super-user-group
+   each lord responsible for a section of the system
+# ROOT ############################
+only one way to total-control root a computer
+   heir $KEY -> ssh ANONI heir 
+   ANONI heir -> RABBIT $KEY -> ssh host RABBIT -> su root 
+# TERMS ###########################
+OTOPSK - one time only pre shared key
+RABBIT - alarm authenticated-wheel hole to host root
+ANONI  - external-anonymous access shell interface
+WORLD  - unix nfs CLAN user filesystem
+CLAN   - unix-groups allow persistent data accross ANONI sessions
+PF_NET - network IPv4 connection lists
+NODE   - individual machine on network
+CENSUS - network file indexes of location
+META   - meta-data index arrays 
+man-in-the-middle - entity intercepts traffic between two nodes
+# USB #############################
+BANK
+   PF_NET
+   CLAN 
+   host/	
+      $host/ 
+         $grp/    
+            $usr/ p id_rsa.pub id_rsa 
+KERN
+   README
+   bin/
+		host programs
+   jbin/
+		jail programs
+   conf/
+		host conf files
+   jconf/
+		jail conf files
+   HIVE/
+		DEMON code
+   install/
+	        host install proceedure
+   jinstall/
+		jail install proceedure
+META
+   NAM
+   PAT
+   SIZ
+   ENC
+LOG
+   misc/
+   CENSUS 
+      NODE/
+# IMPORTANT #######################
+%    - command typed into terminal
+//// - comment on action to take
+>>>> - example command
+CAPS - item a variable to be replaced with value learnt from prior-step
+# BEWARE ##########################
+follow these steps exact
+consequences may be dire
+# BEGIN ###########################

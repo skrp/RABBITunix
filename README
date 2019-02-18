@@ -2,6 +2,7 @@
 # MKRX   - network unix clones
 #                              to0j
 ###################################
+new tutorials in the TUT folder
 # INTRO ###########################
 journey to the land of unix
 experience C & shell & perl 
@@ -28,7 +29,7 @@ truth if anonymous
 get a common AMD64-machine 
 remake machine via README into a unix node
 attach node to a peer-2-peer encrypted-network
-
+###################################
 all connections encrypted via single-use-keys
 such keys:
   - prevent replay attacks from man-in-the-middle
@@ -128,29 +129,36 @@ LOG
    misc/
    CENSUS 
       NODE/
-# BEGIN ###########################
-discover if computer supports AMD64
-keyboard F1-F12 are computer-unique hot-keys
-one hot-key will drop you into BIOS
-hot-key only works during first-few-moments of boot
-power-one machine
-wait to see if BIOS will display a banner
-banner will display mobo manufacturer & correct hot-key
-or just spam F-keys to find correct hot-key
-drop to BIOS
-BIOS will reveal machine cpu
-look for boot options
-select usb device to boot first
-curiousity & relentlessness rewards answer
-trial & error is the action of the hacker
-when configuration of BIOS is believed to be correct
-do not press hot-key & hope 
-correct if freeBSD demon is displayed after during boot
 # IMPORTANT #######################
 %    - command typed into terminal
 //// - comment on action to take
 >>>> - example command
-CAPS - item a variable learnt from prior-step
+CAPS - item a variable to be replaced with value learnt from prior-step
+# BEWARE ##########################
+follow these steps exact
+consequences may be dire
+# BEGIN ###########################
+
+find the hot-key F2-F12
+this will drop to BIOS 
+
+be quick & relentless
+
+bios may display a banner during boot
+mobo manufacturer & correct hot-key
+
+
+once in bios be curious
+discover if computer supports amd64
+
+look for boot options
+select usb device to boot first
+
+curiousity & relentlessness rewards answer
+trial & error is the action of the hacker
+
+save & exit configuration of bios
+correct if freebsd demon displayed during boot
 # INSTALL PROCEEDURE ##############
 #### set bios boot from usb
 #### boot FreeBSD-install-memstick

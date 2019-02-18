@@ -105,7 +105,7 @@ copy("$usb/KERN/conf/.cshrc","$home");
 # rabbit -> con_host -> ANONI_jail -> heir_jail -> rabbit_host -> root 
 ############################
 my @grp = cr_grp();
-my $limit = 1000;
+my $limit = 5000;
 my @list = 1..$limit;
 mkdir("/root/grp");
 ############################

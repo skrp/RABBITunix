@@ -1,0 +1,72 @@
+# TERMS ###########################
+//// HOST - node hostname
+//// USB - usb INIT name
+//// INT - network interface
+//// IP4 - node address { #.#.#.# }
+//// jIP4 - jail address { #.#.#.# }
+# ifconfig  #######################
+//// ifconfig will report network-interfaces
+//// interface { em0,re0,... } is the INT
+//// IP4 are four numbers seperated by '.'
+% ifconfig
+   >>>> re0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
+   >>>>      inet 1.0.1.3 netmask 0xff000000 broadcast 1.255.255.255 
+
+   >>>> INT = re0
+   >>>> IP4 = 1.0.1.3
+# vim #############################
+# GENERIC_WORLD ###################
+% zpool import -f USB
+
+% cd /USB/KERN/install/
+% /bin/sh /USB/KERN/install/1.INIT
+
+% perl /USB/KERN/install/2.PORT /USB
+
+% perl /USB/KERN/install/3.WORLD /USB node
+
+% vim /etc/rc.conf
+   >>>> ifconfig_INT="IP4"
+
+% vim /etc/pf.conf
+   >>>> int_if = "INT" 
+   >>>> self = "IP4"
+   >>>> anoni = "jIP4"
+
+% vim /etc/jail.conf 
+   >>>> interface = 'INT';
+   >>>> ip4.addr = "jIP4";
+
+% vim /etc/pf_net
+   >>>> IP4 
+   >>>> jIP4 
+# CUSTOM_WORLD ####################
+% rm -r /usr/obj
+% cd /usr/src/
+% make -j2 buildkernel KERNCONF=KERN
+% make installkernel KERNCONF=KERN
+% rm -r /usr/obj
+% make -j2 buildworld
+% make installworld
+% make installworld DESTDIR=/usr/ANONI
+% make distribution DESTDIR=/usr/ANONI
+% cp -R /usr/local/ /usr/ANONI/usr/local/
+% zpool export USB 
+# SHADOW_WORLD ####################
+% zpool import -o altroot=/usr/ANONI/mnt USB 
+% jail -c anoni
+% jls
+//// verify the jail has the number 1
+% jexec 1 /bin/csh
+% cd /mnt/USB/KERN/jinstall/
+% perl /mnt/USB/KERN/jinstall/1.WORLD /mnt/USB
+% perl /mnt/USB/KERN/jinstall/2.ANONI /mnt/USB HOST 
+% vim /etc/rc.conf
+   >>>> ifconfig_INT="IP4"
+% exit
+
+% zpool export USB
+
+//// unplug USB 
+% reboot
+# --- REBOOT ---

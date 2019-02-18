@@ -1,0 +1,25 @@
+# BEGIN ###########################
+only have installer usb inserted into computer
+
+power on
+
+find the hot-key F2-F12
+this will drop to BIOS 
+
+be quick & relentless
+
+bios may display a banner during boot
+mobo manufacturer & correct hot-key
+
+
+once in bios be curious
+discover if computer supports amd64
+
+look for boot options
+select usb device to boot first
+
+curiousity & relentlessness rewards answer
+trial & error is the action of the hacker
+
+save & exit configuration of bios
+correct if freebsd demon displayed during boot
