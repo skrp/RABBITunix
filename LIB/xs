@@ -1,66 +1,12 @@
-# XTRACTION & STANDARDIZE 
-sub XS
-{
-  my ($file, $POOL, $G) = @_;
-  my $sha = f_digest($file); 
-  print $Lfh "FAIL sha $file $!" if (!defined $sha);
-
-  my $meta = $G.'g'.$sha;
-  unless (eval { open(my $fh, '>>', $meta) })
-  {
-    print $Lfh "!!!! FAIL meta $sha\n" unless (-e $meta);
-    return;
-  }
-  open(my $mfh, '>>', $meta);
-  my $iname = xsname($file); 
-  my $ipath = xspath($file);
-  my $isize = xssize($file);
-  my $imime; 
-  print $Lfh "FAIL mime_enc $file $sha\n" unless eval { $imime = file_mime_encoding($file) };
-  print $mfh "$iname\n$ipath\n$isize\n$imime\n";
-  close $mfh;
-  `cp $file, $POOL.$sha`;
-}
-sub f_digest
-{
-  my ($file) = @_;
-  my $digester = Digest::SHA->new('sha256');
-  $digester->addfile( $file, 'b' );
-  return $digester->hexdigest;
-}
-sub xsname
-{
-  my ($file) = @_;
-  $file =~ s?^.*/??;
-  return $file;
-}
-sub xspath
-{
-  my ($file) = @_;
-  $file =~ s?/?_?g;
-  return $file;
-}
-sub file_mime_encoding
-{
-  my ($file) = @_;
-  my $magic = File::LibMagic->new();
-  my $info = $magic->info_from_filename($file);
-  my $des = $info->{description};
-  $des =~ s?[/ ]?.?g;
-  $des =~ s/,/_/g;
-  my $md = $info->{mime_type};
-  $md =~ s?[/ ]?.?g;
-  my $enc = sprintf("%s %s %s", $des, $md, $info->{encoding});
-  return $enc;
-}
-sub xssize
-{
-  my ($file) = @_;
-  my $size = -s $file;
-  return $size;
-}
-# create global array @FILE ;
-# dir_walk($DIR, \&print_file);
+#use Digest::SHA; 
+#use File::LibMagic;
+#use File::Copy;
+#my ($DIR, $POOL, $G) = @ARGV;
+#die "ARG1 target ARG2 pool ARG3 G\n" unless (defined $G);
+#$DIR =~ s%/\z%%;
+#my @FILE;
+#dir_walk($DIR, \&print_file);
+#XS($_, $POOL, $G) for @FILE;
 sub dir_walk
 { 
 	my ($DIR, $code) = @_;
@@ -87,4 +33,67 @@ sub dir_walk
 sub print_file
 {
 	push @FILE, $_[0] if -f $_[0];
+}
+# XTRACTION & STANDARDIZE 
+sub XS
+{
+  my ($file, $POOL, $G) = @_;
+  my $sha = f_digest($file); 
+  print "FAIL sha $file $!" if (!defined $sha);
+
+  my $meta = $G.'g'.$sha;
+  unless (eval { open(my $fh, '>>', $meta) })
+  {
+    print "!!!! FAIL meta $sha\n" unless (-e $meta);
+    return;
+  }
+  open(my $mfh, '>>', $meta);
+  my $iname = xsname($file); 
+  my $ipath = xspath($file);
+  my $isize = xssize($file);
+  my $imime; 
+  print "FAIL mime_enc $file $sha\n" unless eval { $imime = file_mime_encoding($file) };
+  print $mfh "$iname\n$ipath\n$isize\n$imime\n";
+  close $mfh;
+
+  copy("$file", "$POOL$sha");
+}
+sub f_digest
+{
+  my ($file) = @_;
+  my $digester = Digest::SHA->new('sha256');
+  $digester->addfile( $file, 'b' );
+  return $digester->hexdigest;
+}
+sub xsname
+{
+  my ($file) = @_;
+  $file =~ s?^.*/??;
+  $file =~ s?\s??g;
+  return $file;
+}
+sub xspath
+{
+  my ($file) = @_;
+  $file =~ s?/?_?g;
+  return $file;
+}
+sub file_mime_encoding
+{
+  my ($file) = @_;
+  my $magic = File::LibMagic->new();
+  my $info = $magic->info_from_filename($file);
+  my $des = $info->{description};
+  $des =~ s?[/ ]?.?g;
+  $des =~ s/,/_/g;
+  my $md = $info->{mime_type};
+  $md =~ s?[/ ]?.?g;
+  my $enc = sprintf("%s %s %s", $des, $md, $info->{encoding});
+  return $enc;
+}
+sub xssize
+{
+  my ($file) = @_;
+  my $size = -s $file;
+  return $size;
 }
