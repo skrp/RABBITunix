@@ -1,0 +1,23 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+
+sub scp
+{
+	# dest = $usr@$host:$location
+	my ($deposit, $file) = @_;
+	
+	# demon flags usr to put key in tmp/usr/dir
+	# dest key
+	# dest & src key
+	slurp(
+	`scp $dest` for (@QUE);
+
+
+}
+sub f_own 
+{
+	my ($file) = @_;
+	my $owner = `ls -l $file |  awk '{print \$3}'`;
+	chomp $owner;
+	return $owner;
+}

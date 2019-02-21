@@ -1,0 +1,10 @@
+sub rep
+{
+	my ($date, $clan, $name) = @_;
+
+	open($rfh, '>>', "/REP/$clan");
+	print $rfh "$name\n";
+	close $rfh;
+
+	return 0;
+}

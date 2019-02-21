@@ -1,0 +1,10 @@
+sub que_get
+{
+	my $dh;
+	opendir($dh, $FEED);
+	my @ls = readdir($dh);
+	shift(@ls); shift(@ls);
+	my $que_path = $FEED.$ls[0];
+	move($que_path, $TODO);
+	print $Lfh "que: $que_path\n";
+}

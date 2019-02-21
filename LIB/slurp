@@ -1,0 +1,12 @@
+sub slurp 
+{
+	my ($file) = @_;
+	my $subfh; 
+	my @slurp;
+
+	open($subfh, '<', $file) or die "FAIL slurp $file : $!\n";
+	@slurp = readline $subfh;
+	close $subfh; chomp @slurp;
+
+	return @slurp;
+}

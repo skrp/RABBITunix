@@ -1,0 +1,50 @@
+###
+sub TIME
+{
+	my ($t, $mon, $day, $hour, $time);
+	$t = localtime();
+	$mon = (split(/\s+/, $t))[1];
+	$day = (split(/\s+/, $t))[2];
+	$hour = (split(/\s+/, $t))[3];
+	$time = $mon.'_'.$day.'_'.$hour;
+	return $time;
+}
+###
+sub daemon
+{
+	my ($pid, $pid2, $fd, $des);
+	die "FAIL fork 1 $!\n" unless (($pid = POSIX::fork()) == 0);
+	die "FAIL child 1 $!\n" unless ($pid == 0);
+	die "FAIL setsid $!\n" unless POSIX::setsid();
+	die "FAIL fork 2 $!\n" unless (($pid2 = POSIX::fork()) == 0); 
+	die "FAIL child 2 $!\n" unless ($pid2 == 0);
+	die "FAIL chdir tmp $!\n" unless chdir('/HIVE/');
+	POSIX::umask 0;	
+	$fd = 3;
+	do { POSIX::close($fd); $fd++; } while ($fd < 1024);
+	$des = '/dev/null';
+	open(STDIN, '<', $des);
+	open(STDOUT, '>', $des);
+	open(STDERR, '>', $des);
+	return 0;
+}
+###
+sub SLEEP
+{
+	my ($cnt, $ttl, @QUE) = @_;
+	my ($Sfh, $timeout, $curTIME);
+	open($Sfh, '<', $SLEEP);
+	$timeout = readline $Sfh; chomp $timeout;
+	$curTIME = TIME();
+	print $Lfh "SLEEP $curTIME $timeout\n";	
+	close $Sfh; unlink $SLEEP;
+	SUICIDE($cnt, $ttl, @QUE) if ($timeout eq 'SUICIDE');
+	tombstone($cnt, $ttl);
+	sleep $timeout;
+}
+###
+sub SUICIDE
+{
+	my ($cnt, $ttl, @QUE) = @_;
+	my $curTIME = TIME();
+	print $Lfh "FKTHEWORLD $curTIME\n";

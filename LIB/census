@@ -1,0 +1,20 @@
+sub census
+{
+	my ($pool, $target_dir) = @_;
+	my @active = z_act($pool);
+
+	for (@active)
+	{
+		my $p = $_;
+		$p =~ s%/.*%%;
+	###############################
+		my $path = "/$p/pool/";
+		opendir(my $idh, $path) or die "$path FAIL\n";
+		my @i = readdir $idh;
+		chomp @i;
+	###############################
+		my $i = $target_dir.'/'.$p.'_LIST';
+		open(my $ifh, '>', $i);
+		print $ifh "$_\n" for (@i);
+	}
+}

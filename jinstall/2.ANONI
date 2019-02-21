@@ -24,7 +24,7 @@ cr_home($_) for (@list);
 cr_usr($_) for (@list);
 close $nfh; close $pfh; close $psfh;
 cr_key($node);
-`chown :norm /HIVE/FEED/norm`;
+`chown :norm /usr/ANONI/HIVE/FEED/norm`;
 ############################
 sub g_list
 {

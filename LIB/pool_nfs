@@ -1,0 +1,13 @@
+sub pool_nfs
+{
+	my @pool = @_;
+	my $loc = '/usr/ANONI/nfs';
+	for (@pool)
+	{
+		`zpool import -f -o altroot=$loc $_`;
+		sleep 60;
+		`zfs set sharenfs=on $_`;
+		`zfs set readonly=on $_`;
+		print "FAIL $_\n" unless (-d "$loc/$_");
+	}
+}

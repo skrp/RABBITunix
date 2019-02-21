@@ -1,0 +1,28 @@
+sub cr_nfs
+{
+	my ($pool) = @_;
+	$pool =~ s%/\z%%;
+
+	my $rnfs = "$pool/usr/ANONI/nfs";
+	my $pub = "$rnfs/pub";
+	my $WORLD = "$rnfs/WORLD";
+	
+	my $dump = "$rnfs/dump";
+	my $p = "$rnfs/dump/pool";
+	my $g = "$rnfs/dump/g";
+
+	`zfs create $rnfs`;
+	`chmod 550 $rnfs`;
+	`zfs set sharenfs=on $rnfs`;
+	`zfs create $pub`;
+	`chmod 750 $pub`;
+	`zfs set sharenfs=on $pub`;
+	`zfs create $WORLD`;
+	`chmod 750 $WORLD`;
+	`zfs set sharenfs=on $WORLD`;
+	`zfs create $dump`;
+	`zfs set sharenfs=on $dump`;
+	`mkdir $p`;
+	`mkdir $g`;
+	`chmod -R 333 $dump`;
+}

@@ -1,0 +1,43 @@
+sub camcontrol
+{
+	my ($usr, $file) = @_;
+	my (@rootcam, @usrcam, @set, @cmd);
+	my ($msg1, $msg2, $cfile, $fs, $dev);
+
+	$msg1 = 'disconnect device 5min';
+	$msg2 = 'available dev';
+	$cfile = '';
+
+	sleep 5;
+	out($file, $msg1);
+
+	@rootcam = `camcontrol devlist`;
+	chomp @rootcam;
+	$_ =~ s%.*\(%% for @rootcam;
+	$_ =~ s%,.*%% for @rootcam;
+
+	out($file, 'now');
+	sleep 30;
+	
+	@usrcam = `camcontrol devlist`;
+	chomp @usrcam;
+	$_ =~ s%.*\(%% for @usrcam;
+	$_ =~ s%,.*%% for @usrcam;
+
+	@set = uniq(\@rootcam, \@usrcam);
+
+	$msg2 .= " $_" for @set;
+
+	out($file, $msg2);
+
+	@cmd = slurp($file);
+	
+	for (@set)
+	{ # dispatch-table
+		if ($_ eq @cmd[1])
+		{
+				\&$cmd[0];
+			return 0;
+		}
+	}	
+}

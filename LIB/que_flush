@@ -1,0 +1,7 @@
+sub que_flush
+{
+	my (@QUE) = @_;
+	open(my $TODOfh. '>', $TODO);
+	print $TODOfh "$_\n" for (@QUE);
+	close $TODOfh;	
+}

@@ -1,0 +1,15 @@
+sub ntfs
+{
+	my ($dev, $udir) = @_;
+	my $usr = $udir;
+	$usr =~ s%/usb/%%; $usr =~ s%*./%%; 
+
+	`ntfs_3g /dev/$dev $udir`;
+
+	opendir(my $tdh, $udir) or return 1;
+	close $tdh;
+	`chmod -R 700 $udir`;
+	`chown -R $usr $udir`;
+
+	return 0;
+}
