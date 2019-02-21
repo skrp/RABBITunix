@@ -2,8 +2,8 @@
 use strict; use warnings;
 use POSIX;
 ##############################
-# FRED - log quest-giver DEMON
-# REP nobles only quests
+# MAID - housekeeper DEMON 
+#     dis-bitch-keepz-da-house
 ##############################
 # BIRTH ######################
 die "FAIL STILLBORN $!\n" unless (daemon() == 0);
@@ -40,26 +40,32 @@ die "FAIL write pool $!\n" unless (-w $POOL);
 die "FAIL write g $!\n" unless (-w $G);
 die "FAIL write BIO $!\n" unless (-w $BIO);
 die "FAIL write PING $!\n" unless (-w $PING);
+die "FAIL write TODO $!\n" unless (-w $TODO);
 die "FAIL write FEED $!\n" unless (-w $FEED);
-
-my %SHA;
-my (@log, @map);
-my ($usr, $quest);
-$quest = '/usr/ANONI/HIVE/FEED/seer/'; 
-@log = slurp('/usr/ANONI/HIVE/FEED/fred_QUEST'); 
-@map = slurp('/usr/ANONI/HIVE/FEED/fred_MAP');
-for (@log)
-{	
-	my $i_digest = f_digest($_); 
-	$SHA{$_} = $i_digest;
-}
-chdir $quest;
+die "FAIL write PING $!\n" unless (-w $PING);
 # LIVE #######################
 while (1)
 {
-	SLEEP($YAY, $FAIL, 'FRED') if (-e $SLEEP);
-	act();
-	tombstone($YAY, $FAIL);
+	my ($cnt, $ttl);
+	my @QUE = que_up();
+# SLEEP ######################
+	do { print $Lfh "bored\n"; sleep 3600; next} if (!@QUE);
+# WORK #######################
+	$cnt = 0;
+	$ttl = @QUE;
+	print $Lfh "ttl $ttl\n";
+	for (@QUE)
+	{
+		SLEEP($cnt, $ttl, @QUE) if (-e $SLEEP);
+		act($_);
+		if ($cnt % $RATE == 0)
+		{
+			tombstone($cnt, $ttl);
+			que_flush(@QUE);
+		}
+		$cnt++;
+	}
+	unlink $TODO;
 }
 # CORE #######################
 sub name
@@ -173,36 +179,59 @@ sub rep
 {
 	my ($date, $clan, $name) = @_;
 
-	open($rfh, '>>', "/REP/$clan");
+	open(my $rfh, '>>', "/REP/$clan");
 	print $rfh "$name\n";
 	close $rfh;
 
 	return 0;
 }
-sub rep
+sub pool_nfs_sweep
 {
-	my ($date, $clan, $name) = @_;
-	open($rfh, '>>', "/REP/log/$clan");
-	print $rfh "$name\n";
-	close $rfh;
-	return 0;
+	my @pool = @_;
+	my $loc = '/usr/ANONI/nfs';
+	for (@pool)
+	{
+		next if (-d "$loc/$_");
+		`zpool import -f -o altroot=$loc $_`;
+		sleep 60;
+		`zfs set sharenfs=on $_`;
+		`zfs set readonly=on $_`;
+		print $Lfh "FAIL $_ $!\n" unless (-d "$loc/$_");
+	}
 }
-##################################
 sub act
 {
 	sleep 3600;
-	for (@map)
-	{
-		my $i = "$_/fred";
-		next unless (-f "$i");
-		my @cmd = slurp($i);
-		my @stamp = split(" ",$cmd[0]);
-		my $date = $stamp[0];
-		my $log = $stamp[1];
-		my $clan = $stamp[2];
-		my $sha = $stamp[3];
+	my @pool = slurp('/etc/nfs');
+	pool_nfs_sweep(@pool);
+}
+sub sup
+{
+	my(%h, %j);
+	my @h = slurp('/var/log/used');
+	my @j = slurp('/usr/ANONI/var/log/used');
 
-		rep($date, $clan, 'FRED') if ($sha eq $SHA{$log});
-		$YAY++;
-	}
+	wipe($_, '/usr/home') for (@h);
+	wipe($_, '/usr/ANONI/usr/home') for (@j);
+}
+sub wipe
+{
+	my ($usr, $udir) = @_;
+	my $ssh = "$udir/.ssh/";
+	`rm -r $ssh*`;	
+	mkdir $ssh;
+	`chmod -R 000 $ssh`;
+	return 0;
+}
+sub slurp 
+{
+	my ($file) = @_;
+	my $subfh; 
+	my @slurp;
+
+	open($subfh, '<', $file) or die "FAIL slurp $file : $!\n";
+	@slurp = readline $subfh;
+	close $subfh; chomp @slurp;
+
+	return @slurp;
 }

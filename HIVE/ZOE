@@ -102,7 +102,7 @@ sub daemon
 	die "FAIL setsid $!\n" unless POSIX::setsid();
 	die "FAIL fork 2 $!\n" unless (($pid2 = POSIX::fork()) == 0); 
 	die "FAIL child 2 $!\n" unless ($pid2 == 0);
-	die "FAIL chdir tmp $!\n" unless chdir('/HIVE/');
+	die "FAIL chdir tmp $!\n" unless chdir("$ROOT");
 	POSIX::umask 0;	
 	$fd = 3;
 	do { POSIX::close($fd); $fd++; } while ($fd < 1024);

@@ -1,0 +1,285 @@
+#!/usr/local/bin/perl
+use strict; use warnings;
+use File::Copy;
+###########################
+# WORLD - host buildworld 
+###########################
+my ($usb, $node) = @ARGV;
+die "ARG1 /usb ARG2 node\n" unless (defined $node);
+$usb =~ s%/\z%%;
+chdir("$usb/KERN/") or die "FAIL $usb\n";;
+# PASSBUTTON ##############
+my @p = qw(0 . 1 2 3 4 5 6 + 7 8 9 / * - q w e r a s d f z x c v);
+# ROOT ####################
+copy("$usb/KERN/conf/.cshrc",'/root/');
+`chown -R root /root/`;
+`chmod -R 700 /root/`;
+unlink '/home';
+###########################
+mkdir '/CLAN';
+mkdir '/KRIP';
+mkdir '/CLAN/pool/';
+mkdir '/CLAN/src/';
+mkdir '/CLAN/log/';
+mkdir '/KRIP/norm/';
+mkdir '/KRIP/lord/';
+chmod(550,'/CLAN');
+chmod(550,'/KRIP');
+chmod(770,'/CLAN/pool/');
+chmod(770,'/CLAN/src/');
+chmod(770,'/CLAN/log/');
+chmod(770,'/KRIP/norm/');
+chmod(770,'/KRIP/lord/');
+###########################
+`zfs create zroot/usr/ANONI`;
+`zfs create zroot/usr/ANONI/home`;
+#`zfs create zroot/usr/ANONI/WORLD`;
+#`zfs create zroot/usr/ANONI/CNT`;
+`zfs create zroot/usr/ANONI/dump`;
+mkdir '/usr/ANONI/dump/pool';
+mkdir '/usr/ANONI/dump/g';
+chmod(333,'/usr/ANONI/dump/pool/');
+chmod(333,'/usr/ANONI/dump/g/');
+###########################
+"FAIL nfs\n" if (cr_nfs != 0);
+###########################
+`zfs create -o mountpoint=/usr/ANONI/HIVE zroot/HIVE`;
+mkdir("/usr/ANONI/HIVE/BIO/");
+mkdir("/usr/ANONI/HIVE/TODO/");
+mkdir("/usr/ANONI/HIVE/FEED/");
+mkdir("/usr/ANONI/HIVE/FEED/norm");
+`chmod -R 777 '/usr/ANONI/HIVE/FEED/norm'`;
+`touch /usr/ANONI/HIVE/PING`;
+###########################
+`cp bin/* /bin/`;
+###########################
+copy('../BANK/pf_net','/etc/pf_net');
+#`cp conf/fstab /etc/fstab`;
+#copy(/etc/src.conf', 'conf/src.conf');
+copy('conf/make.conf','/etc/');
+copy('conf/motd','/etc/');
+copy('conf/purgehost','/etc/');
+copy('conf/pf.conf','/etc/');
+copy('conf/ntpd.conf','/usr/local/etc/ntpd.conf');
+copy('conf/rc.conf','/etc/');
+#`cp conf/resolv.conf /etc/resolv.conf`;
+copy('conf/sshd_config','/etc/ssh/sshd_config');
+#`cp conf/start_if.em0 /etc/start_if.em0`;
+#`cp conf/start_if.re0 /etc/start_if.re0`;
+copy('conf/ttys', '/etc/');
+copy('conf/KERN','/usr/src/sys/amd64/conf/KERN');
+copy('conf/sysctl.conf','/etc');
+copy('conf/jail.conf','/etc/');
+copy('conf/login.conf','/etc/');
+copy('conf/exports','/etc/');
+###########################
+copy('conf/hive', '/etc/rc.d/hive');
+`chmod +x /etc/rc.d/hive`;
+`cp HIVE/* /usr/ANONI/HIVE/BIO/`;
+###########################
+my $hn = `hostname`; chomp $hn;
+`echo hostname='$hn' >> /etc/rc.conf`;
+###########################
+`pw userdel toor`;
+###########################
+open(my $hfh, '<', '/etc/purgehost');	
+my @lines = readline $hfh;
+close $hfh; chomp @lines;
+chdir("/");
+`rm -rf $_` for (@lines);
+###########################
+`rm -rf /usr/lib32/`;
+###########################
+`rm -rf /usr/lib32/`;
+portinstall();
+modinstall();
+###########################
+my $shell = '/bin/csh';
+my $home = "/usr/home/con/";
+my $cs = "/usr/home/con/.ssh/";
+mkdir $home;
+mkdir $cs;
+copy("$usb/KERN/conf/.cshrc","$home");
+`echo con | pw useradd -h 0 -n con -d $home -s $shell`;
+`chmod -R 700 $home`;
+`chown -R con $home`;
+############################
+# HEIR #####################
+# rabbit -> con_host -> ANONI_jail -> heir_jail -> rabbit_host -> root 
+############################
+my @grp = cr_grp();
+my $limit = 5000;
+my @list = 1..$limit;
+mkdir("/root/grp");
+############################
+cr_home($_) for (@list);
+cr_usr($_) for (@list);
+cr_key($node);
+############################
+sub cr_home
+{
+	my ($usr) = @_;
+############################
+	my $home = "/usr/home/$usr/";
+	mkdir $home;
+############################
+	#copy($home, "$usb/KERN/conf/.vimrc $home");
+	my $ssh = $home.'.ssh/';
+	my $udir = $home.'usb/';
+	mkdir("$udir");
+	mkdir("$ssh");
+	`chown -R $usr $ssh`;
+############################
+	copy("$usb/KERN/conf/.cshrc","$home");
+}
+############################
+sub cr_usr
+{
+	my ($usr) = @_;
+	my $home = "/usr/home/$usr/";
+	`pw useradd -n $usr -d $home -s $shell`;
+	`chmod -R 700 $home`;
+	`chown -R $usr $home`;
+	
+	my $grp = grp();
+	`pw usermod -n $usr -G $grp`;
+	`echo '$usr' >> /root/grp/$grp`; 
+	print "$usr created\n";
+############################
+	`chmod -R 700 $home.ssh`;
+}
+############################
+sub cr_key
+{
+	my ($node) = @_;
+############################
+	for (@grp)
+	{
+		my $igrp = $_;
+		open(my $cfh, '<', "/root/grp/$igrp") or next;
+		my @ic = readline $cfh;
+		close $cfh; chomp @ic;
+############################
+		for (@ic)
+		{
+			my $iu = $_;
+
+			my $idump = $usb."/BANK/host/$node/$igrp/$iu";
+			my $key = "/usr/home/$iu/.ssh/id_rsa";
+			my $pub = $key.'.pub';
+############################
+			`mkdir -p $idump`;
+			my @pass = neopass();
+############################
+			`ssh-keygen -q -N "$pass[0]" -t rsa -b 2048 -f $key`;
+############################
+			move($key, "$idump/id_rsa");
+			copy($pub, "$idump/known_hosts");
+			move($pub, "/usr/home/$iu/.ssh/authorized_keys");
+			`echo "$pass[1]" > $idump/p`;
+############################
+			print "$key created\n";
+		}
+	}
+}
+############################
+sub cr_grp
+{
+	my @c = qw(wheel clan rep world pf zfs usb hive src);
+############################
+	push(@grp, $_) for (@c);
+	push(@grp, "x$_") for (@c);
+############################
+	`pw groupadd $_` for (@grp);
+	return @grp;
+############################
+}
+sub grp
+{
+	my $rnum = `jot -r 1 0 16`;
+	my $grp = $grp[$rnum];
+	return $grp;
+}
+sub neopass
+{
+	my @pass;
+############################
+	my $cnt2 = 0;
+	while ($cnt2 < 4)
+	{
+		my @set = `jot -r 5 0 26`;
+		chomp @set;
+		for (@set)
+		{
+			no warnings 'uninitialized';	
+			$pass[0] .= $p[$_];
+			$pass[1] .= $p[$_];
+		}
+		$cnt2++;
+		$pass[1] .= ' ';
+	}
+############################
+	chop $pass[1];
+	return @pass;
+}
+sub cr_nfs
+{
+	my ($pool) = @_;
+	$pool =~ s%/\z%%;
+	my $ret = 0;
+
+	my $rnfs = "$pool/usr/ANONI/nfs";
+	my $pub = "$rnfs/pub";
+	my $WORLD = "$rnfs/WORLD";
+	
+	my $dump = "$rnfs/dump";
+	my $p = "$rnfs/dump/pool";
+	my $g = "$rnfs/dump/g";
+
+	$ret += `zfs create $rnfs || echo 1`;
+	chomp $ret;
+	`chmod 550 $rnfs`;
+	`zfs set sharenfs=on $rnfs`;
+	`zfs create $pub`;
+	`chmod 750 $pub`;
+	`zfs set sharenfs=on $pub`;
+	`zfs create $WORLD`;
+	`chmod 750 $WORLD`;
+	`zfs set sharenfs=on $WORLD`;
+	`zfs create $dump`;
+	`zfs set sharenfs=on $dump`;
+	`mkdir $p`;
+	`mkdir $g`;
+	`chmod -R 333 $dump`;
+
+	return $ret;
+}
+sub portinstall
+{
+  my @ports = ( 'vim');
+##################################
+  for (@ports)
+  {
+    `mkdir /usr/ports/$_`;
+    `tar -xC /usr/ports/ -f $usb/KERN/distfiles/$_.tar`;
+    chdir("/usr/ports/$_");
+    print "FAIL configure $_\n" unless (-e 'configure');
+    `/bin/sh configure`;
+    `make install`;
+  }
+}
+sub modinstall
+{
+  my @mods = ('p.useragent', 'p.file_find', 'p.digest_sha', 'p.file_libmagic', \
+    'p.list_utils', 'p.archive_any', 'p.lwp_https');
+##################################
+  for (@mods)
+  {
+    `mkdir /usr/ports/$_`;
+    `tar -xC /usr/ports/ -f $usb/KERN/distfiles/$_.tar`;
+    chdir("/usr/ports/$_");
+    print "FAIL Makefile.Pl\n" unless (-e 'Makefile.PL');
+    `perl Makefile.PL`;
+    `make install`;
+  }
+ }
