@@ -3,24 +3,26 @@ use strict; use warnings;
 use POSIX;
 use Digest::SHA;
 use File::LibMagic;
+use File::Copy;
 ##############################
-# GLUT - file scraper DEMON 
+# CAM - file scraper DEMON 
 ##############################
 my $cam = '/usr/ANONI/HIVE/FEED/norm/cam';
+my @FILE;
 # BIRTH ######################
 die "FAIL STILLBORN $!\n" unless (daemon() == 0);
 # GLOBAL #####################
 my $NAME = name();
 # /HIVE/
-my $ROOT = '/usr/ANONI/HIVE/'
+my $ROOT = '/usr/ANONI/HIVE/';
 my $PING = $ROOT.'PING';
 my $BIO = $ROOT.'BIO/'.$NAME;
 my $BIOYAY = $ROOT.'BIO/'.$NAME.'_YAY';
 my $BIOFAIL = $ROOT.'BIO/'.$NAME.'_FAIL';
 my $TODO = $ROOT.'TODO/'.$NAME;
 my $FEED = $ROOT.'FEED/';
-my $POOL = '/usr/ANONI/dump/pool/';
-my $G = '/usr/ANONI/dump/g/';
+my $POOL = '/usr/ANONI/nfs/dump/pool/';
+my $G = '/usr/ANONI/nfs/dump/g/';
 # attributes
 my $BIRTH = age();
 my $SLEEP = $TODO.'_SLEEP';
@@ -46,8 +48,10 @@ die "FAIL write FEED $!\n" unless (-w $FEED);
 # LIVE #######################
 while (1)
 {
-	SLEEP($cnt, $ttl, @QUE) if (-e $SLEEP);
+	@FILE = ();
+	SLEEP($YAY, $FAIL, 'CAM') if (-e $SLEEP);
 	act($_);
+	sleep 3600;
 }
 # CORE #######################
 sub name
@@ -160,37 +164,76 @@ sub que_flush
 sub act
 {
 	next unless (-f $cam);
-	my (@FILE, @SHA);
+	my (@SHA);
 
 	my @cmd = slurp($cam);
 	my $target = $cmd[0];
 	my $clan = $cmd[1];
+	$target =~ s%/\z%%;
 
-	dir_walk($target, \&fill);
+	dir_walk($target, \&fill, @FILE);
 	for (@FILE)
 	{
 
-		my $sha = xs($_,$POOL);
+		my $sha = xs($_,$POOL,$G);
 		push(@SHA,$sha);
-
+		print "$sha $_\n";
 	}
 	my $t = TIME();
 	rep($t,$clan,$_) for (@SHA);
 	my $ttl = @SHA;
 
+	$YAY += $ttl;
 	tombstone('CAM', $ttl);
+	unlink $cam;
+}
+sub rep
+{
+	my ($date, $clan, $tag) = @_;
+
+	open(my $rfh, '>>', "/CLAN/pool/$clan");
+	print $rfh "$date $tag\n";
+	close $rfh;
+
+	return 0;
+}
+sub dir_walk
+{ 
+	my ($DIR, $code) = @_;
+	my $dir;
+	$DIR =~ s%/\z%%;
+
+	$code->($DIR);
+	if (-d $DIR)
+	{
+		my $file;
+		unless(opendir $dir, $DIR)
+		{
+			warn "FAIL open dir $DIR: $!\n";
+			return;
+		}
+		while ($file = readdir $dir)
+		{
+			next if $file eq '.' || $file eq '..';
+			dir_walk("$DIR/$file", $code);
+		}
+	}
+}
+sub fill 
+{
+	push @FILE, $_[0] if -f $_[0];
 }
 # XTRACTION & STANDARDIZE 
-sub XS
+sub xs 
 {
   my ($file, $POOL, $G) = @_;
   my $sha = f_digest($file); 
-  print $Lfh "FAIL sha $file $!" if (!defined $sha);
+  print "FAIL sha $file $!" if (!defined $sha);
 
   my $meta = $G.'g'.$sha;
   unless (eval { open(my $fh, '>>', $meta) })
   {
-    print $Lfh "!!!! FAIL meta $sha\n" unless (-e $meta);
+    print "!!!! FAIL meta $sha\n" unless (-e $meta);
     return;
   }
   open(my $mfh, '>>', $meta);
@@ -198,11 +241,12 @@ sub XS
   my $ipath = xspath($file);
   my $isize = xssize($file);
   my $imime; 
-  print $Lfh "FAIL mime_enc $file $sha\n" unless eval { $imime = file_mime_encoding($file) };
+  print "FAIL mime_enc $file $sha\n" unless eval { $imime = file_mime_encoding($file) };
   print $mfh "$iname\n$ipath\n$isize\n$imime\n";
   close $mfh;
 
-  `cp $file, $POOL.$sha`;
+  copy("$file", "$POOL$sha");
+  print "$file $POOL$sha\n";
   return $sha;
 }
 sub f_digest
@@ -216,6 +260,7 @@ sub xsname
 {
   my ($file) = @_;
   $file =~ s?^.*/??;
+  $file =~ s?\s??g;
   return $file;
 }
 sub xspath
@@ -243,40 +288,13 @@ sub xssize
   my $size = -s $file;
   return $size;
 }
-sub dir_walk
-{ 
-	my ($DIR, $code) = @_;
-	my $dir;
-	$DIR =~ s%/\z%%;
-
-	$code->($DIR);
-
-	if (-d $DIR)
-	{
-		my $file;
-		unless(opendir $dir, $DIR)
-		{
-			warn "FAIL open dir $DIR: $!\n";
-			return;
-		}
-		while ($file = readdir $dir)
-		{
-			next if $file eq '.' || $file eq '..';
-			dir_walk("$DIR/$file", $code);
-		}
-	}
-}
-sub fill 
+sub slurp 
 {
-	push @FILE, $_[0] if -f $_[0];
-}
-sub rep
-{
-	my ($date, $clan, $tag) = @_;
+	my ($file) = @_;
 
-	open(my $rfh, '>>', "/REP/pool/$clan");
-	print $rfh "$tag\n";
-	close $rfh;
+	open(my $subfh, '<', $file) or die "FAIL slurp $file : $!\n";
+	my @slurp = readline $subfh;
+	close $subfh; chomp @slurp;
 
-	return 0;
+	return @slurp;
 }

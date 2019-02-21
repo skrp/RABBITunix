@@ -8,4 +8,5 @@ load_rc_config $name
 perl /usr/ANONI/HIVE/BIO/TED
 perl /usr/ANONI/HIVE/BIO/ALEX
 perl /usr/ANONI/HIVE/BIO/ZOE
+perl /usr/ANONI/HIVE/BIO/CAM
 perl /usr/ANONI/HIVE/BIO/WUF

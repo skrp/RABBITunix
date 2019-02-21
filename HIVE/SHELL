@@ -9,7 +9,7 @@ die "FAIL STILLBORN $!\n" unless (daemon() == 0);
 # GLOBAL #####################
 my $NAME = name();
 # /HIVE/
-my $ROOT = '/usr/ANONI/HIVE/'
+my $ROOT = '/usr/ANONI/HIVE/';
 my $PING = $ROOT.'PING';
 my $BIO = $ROOT.'BIO/'.$NAME;
 my $BIOYAY = $ROOT.'BIO/'.$NAME.'_YAY';
